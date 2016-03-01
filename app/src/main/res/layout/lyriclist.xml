@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.percent.PercentRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical" android:layout_width="280dp"
+    android:layout_height="400dp"
+    android:background="@drawable/back"
+    android:elevation="3dp"
+    >
+    <TextView
+        android:id="@+id/lltitle"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        app:layout_heightPercent="10%"
+        android:text="歌词列表"
+        android:layout_marginTop="10dp"
+        android:gravity="center_vertical"
+        android:layout_marginLeft="10dp"
+        android:textSize="20sp"
+        android:textColor="#009688"
+        />
+
+    <RelativeLayout
+        android:id="@+id/lrel"
+        android:layout_below="@id/lltitle"
+        android:layout_width="match_parent"
+        android:dividerHeight="2dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginLeft="5dp"
+
+        android:background="@drawable/listback"
+        app:layout_heightPercent="80%"
+        >
+        <ListView
+            android:id="@+id/llist"
+            android:dividerHeight="2dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </ListView>
+    </RelativeLayout>
+
+
+</android.support.percent.PercentRelativeLayout>

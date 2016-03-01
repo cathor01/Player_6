@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    >
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_home"
+            android:icon="@drawable/ic_filter_grey600_36dp"
+            android:checked="true"
+            android:title="@string/album" />
+        <item
+            android:id="@+id/nav_messages"
+            android:icon="@drawable/ic_my_library_music_grey600_36dp"
+            android:title="@string/singer" />
+        <item
+            android:id="@+id/nav_friends"
+            android:icon="@drawable/ic_my_library_books_grey600_36dp"
+            android:title="@string/folder" />
+        <item
+            android:id="@+id/nav_discussion"
+            android:icon="@drawable/ic_add_to_photos_grey600_36dp"
+            android:title="@string/play_list" />
+    </group>
+    <item android:title="设定">
+        <menu>
+            <item
+                android:icon="@drawable/ic_settings_grey600_36dp"
+                android:title="Setting" />
+
+        </menu>
+    </item>
+</menu>

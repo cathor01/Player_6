@@ -1,0 +1,37 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.cathor.n_5.MainActivity" >
+
+    <item
+        android:id="@+id/click"
+        android:orderInCategory="10"
+        app:showAsAction="never"
+
+        android:title="Click Me!"/>
+    <item
+        android:id="@+id/select"
+        android:orderInCategory="100"
+        app:showAsAction="never"
+
+        android:title="Select!"/>
+	<item
+        android:id="@+id/opinion"
+        android:orderInCategory="50"
+        app:showAsAction="never"
+        android:icon="@drawable/click"
+        android:title="Opinion!"/>
+	<item
+        android:id="@+id/refresh"
+        android:orderInCategory="50"
+        app:showAsAction="never"
+        android:icon="@drawable/click"
+        android:visible="false"
+        android:title="Refresh!"/>
+    <item
+        android:id="@+id/lrc"
+        android:orderInCategory="100"
+        app:showAsAction="never"
+        android:icon="@drawable/choose"
+        android:title="Lrc!"/>
+</menu>

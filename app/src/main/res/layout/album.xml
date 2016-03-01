@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="100dp"
+    android:layout_margin="0dp"
+    android:background="@drawable/backgroundradius"
+    >
+    <ImageView
+        android:id="@+id/album_img"
+        android:layout_height="match_parent"
+        android:layout_width="100dp"
+        android:src="@drawable/choose"
+        android:layout_alignParentLeft="true"
+        android:layout_margin="0dp"
+        android:scaleType="fitXY"
+        android:layout_alignParentTop="true"/>
+    <TextView 
+        android:id="@+id/album_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:singleLine="true"
+        android:maxWidth="300dp"
+        android:layout_toRightOf="@id/album_img"
+        android:layout_marginTop="20dp"
+        android:text="@string/button"
+        android:clickable="true"
+        android:textSize="20sp"/>
+    <TextView
+        android:id="@+id/album_length"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:singleLine="true"
+        android:maxWidth="300dp"
+        android:layout_toRightOf="@id/album_img"
+        android:layout_marginBottom="20dp"
+        android:layout_alignParentBottom="true"
+        android:text="12首"
+        android:clickable="true"
+        android:textSize="16sp"/>
+    
+</RelativeLayout>

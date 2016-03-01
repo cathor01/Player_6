@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="AppTheme" parent="AppTheme.Base">
+        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+        <item name="android:navigationBarColor">#7744ff</item>
+        <item name="android:colorControlNormal">#ffffff</item>
+        <item name="colorPrimary">#4f2DAA</item>
+        <item name="colorPrimaryDark">#4f2DAA</item>
+        <item name="colorAccent">#1B88CA</item>
+    </style>
+</resources>

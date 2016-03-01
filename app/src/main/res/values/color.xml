@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+    <color name="systemBar_color">#7744ff</color><!--导航栏背景颜色 -->
+
+</resources> 
