@@ -164,7 +164,7 @@ public class MyFragment extends Fragment{
 		array = MyService.getInstance().getList();
 		album = MyService.getInstance().getNewAlbum();
 		// TODO Auto-generated method stub
-		System.out.println("create MediaPlayer");
+		Logger.INSTANCE.d("create MediaPlayer");
 		view = createView();
 		return view;
 	}
@@ -177,7 +177,7 @@ public class MyFragment extends Fragment{
 		if(MyService.getInstance().getNowPlay() != -1){
 			try{
 				if(MyService.getInstance().getPlayStatewioutThrow()){
-					System.out.println("path------->1");
+					Logger.INSTANCE.d("path------->1");
 					MyService.getInstance().pause();
 					MainActivity.getInstance().updateNotification(2);
 					Controller.update();
@@ -214,9 +214,9 @@ public class MyFragment extends Fragment{
 		re = new RelativeLayout(inflater.getContext());
 		list = new ListView(inflater.getContext());
 		re.addView(list);
-		System.out.println("Create cursor");
+		Logger.INSTANCE.d("Create cursor");
 		
-		System.out.println("get " + MyService.getInstance().getLength() + " music");
+		Logger.INSTANCE.d("get " + MyService.getInstance().getLength() + " music");
 		list.setClickable(false);
 		list.setFastScrollEnabled(true);
 		list.setFocusable(true);
@@ -317,13 +317,13 @@ public class MyFragment extends Fragment{
 	/*public static int clickMenu(){
 		try{
 			if(MyService.getPlayStatewioutThrow()){
-				System.out.println("path------->1");
+				Logger.INSTANCE.d("path------->1");
 				MyService.pause();
 				MainActivity.updateNoti(2);
 				return 2;
 			}
 			else{
-				System.out.println("path------->2");
+				Logger.INSTANCE.d("path------->2");
 				if(MyService.getNowPlay() != -1){
 					handleMeg(MyService.PLAY, MyService.PLAY_NO_CHANGE);
 					return 1;
@@ -334,11 +334,11 @@ public class MyFragment extends Fragment{
 		}
 		catch(IllegalStateException e){
 			if(MyService.getNowPlay() != -1){
-				System.out.println("path------->3");
+				Logger.INSTANCE.d("path------->3");
 				handleMeg(MyService.PLAY, MyService.PLAY_NO_CHANGE);
 				return 1;
 			}
-			System.out.println("path------->4");
+			Logger.INSTANCE.d("path------->4");
 			return 0;
 		}
 	}*/

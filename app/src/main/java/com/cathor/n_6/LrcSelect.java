@@ -35,7 +35,7 @@ public class LrcSelect extends Activity {
             switch (msg.what){
                 case 101:
                     if(path.equals("wtf")){
-                        System.out.println(path);
+                        Logger.INSTANCE.d(path);
                         Toast.makeText(MainActivity.getInstance(), "MB,网易这首歌没歌词23333,可以的话换另一首吧。。。。。", Toast.LENGTH_SHORT).show();
                         return;
                     }

@@ -11,7 +11,7 @@ import android.util.Log;
 public class PhoneReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
-        System.out.println("action"+intent.getAction());
+        Logger.INSTANCE.d("action"+intent.getAction());
         //如果是去电
         if(intent.getAction().equals(Intent.ACTION_NEW_OUTGOING_CALL)){
             String phoneNumber = intent.getStringExtra(Intent.EXTRA_PHONE_NUMBER);
@@ -39,14 +39,14 @@ public class PhoneReceiver extends BroadcastReceiver {
             super.onCallStateChanged(state, incomingNumber);
             switch(state){
                 case TelephonyManager.CALL_STATE_IDLE:
-                    System.out.println("挂断");
+                    Logger.INSTANCE.d("挂断");
                     break;
                 case TelephonyManager.CALL_STATE_OFFHOOK:
-                    System.out.println("接听");
+                    Logger.INSTANCE.d("接听");
                     MyService.getInstance().pause();
                     break;
                 case TelephonyManager.CALL_STATE_RINGING:
-                    System.out.println("响铃:来电号码"+incomingNumber);
+                    Logger.INSTANCE.d("响铃:来电号码"+incomingNumber);
 //输出来电号码
                     MyService.getInstance().pause();
                     break;

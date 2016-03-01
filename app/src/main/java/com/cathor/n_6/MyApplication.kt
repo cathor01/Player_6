@@ -2,6 +2,15 @@ package com.cathor.n_6
 
 import android.app.Activity
 import android.app.Application
+import android.os.Environment
+import android.util.Log
+import com.nostra13.universalimageloader.cache.disc.impl.BaseDiskCache
+import com.nostra13.universalimageloader.cache.disc.impl.LimitedAgeDiskCache
+import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator
+import com.nostra13.universalimageloader.core.ImageLoader
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration
+import com.nostra13.universalimageloader.core.download.BaseImageDownloader
+import java.io.File
 
 /**
  * Created by Cathor on 2016/2/17.
@@ -16,8 +25,10 @@ class MyApplication : Application {
         val PREFERENCE_VIRTUAL_VALUE = "virtual_value"
         val PREFERENCE_SKIP_VALUE = "skip_value"
     }
-    constructor(): super(){
 
+
+    constructor(): super(){
+        debug("start Activity")
     }
     var datamanager : DataManager? = null
     var controller: CenterController? = null;
@@ -27,6 +38,15 @@ class MyApplication : Application {
         super.onCreate()
         controller = CenterController(this, getSharedPreferences(PREFERENCE_NAME, Activity.MODE_PRIVATE))
         datamanager = MyDataManager(this, getSharedPreferences(PREFERENCE_NAME, Activity.MODE_PRIVATE).getInt(PREFERENCE_SKIP_VALUE, 500))
+        val config = ImageLoaderConfiguration.Builder(this)
+                .threadPoolSize(3)
+                .diskCacheExtraOptions(100, 100, null)
+                .memoryCacheExtraOptions(100, 100)
+                .memoryCacheSize(5 * 1024 * 1024)
+                .diskCacheSize(20 * 1024 * 1024)
+                .diskCacheFileNameGenerator(Md5FileNameGenerator())
+                .build()
+        ImageLoader.getInstance().init(config)
     }
 
     fun GetDataManager(): DataManager {

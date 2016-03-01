@@ -3,44 +3,56 @@ package com.cathor.n_6
 import android.content.ContentUris
 import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.Matrix
-import android.graphics.drawable.BitmapDrawable
-import android.graphics.drawable.Drawable
 import android.net.Uri
-import android.os.Environment
-import android.os.Handler
 import android.util.Log
+import android.view.View
 import android.widget.ImageView
-import java.io.*
-import java.lang.ref.SoftReference
-import java.net.URL
+import com.nostra13.universalimageloader.core.DisplayImageOptions
+import com.nostra13.universalimageloader.core.ImageLoader
+import com.nostra13.universalimageloader.core.assist.FailReason
+import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer
+import com.nostra13.universalimageloader.core.listener.ImageLoadingListener
+import java.io.File
+import java.io.FileDescriptor
+import java.io.FileNotFoundException
 import java.util.*
-import java.util.concurrent.Executors
 
 /**
  * Created by Cathor on 2016/2/29 15:27.
  */
 
-class ImageLoader{
+class MyImageLoader {
     companion object{
-        private var _instance : ImageLoader? = null
-        fun getInstance(): ImageLoader{
+        private var _instance : MyImageLoader? = null
+
+        fun getInstance(): MyImageLoader {
             if(_instance == null){
-                _instance = ImageLoader()
+                _instance = MyImageLoader()
             }
             return _instance!!
         }
         private val sArtworkUri = Uri.parse("content://media/external/audio/albumart")
         private val mUriAlbums = "content://media/external/audio/albums"
+        private val options = DisplayImageOptions.Builder()
+                .displayer(RoundedBitmapDisplayer(10))//是否设置为圆角，弧度为多少
+                .bitmapConfig(Bitmap.Config.RGB_565)
+                .cacheInMemory(true)
+                .cacheOnDisk(true)
+                .build()
     }
+
+
 
     private constructor(){
     }
 
     class ValueType(val type: Boolean, val value: Any? )
 
-    private val map: HashMap<Int, ValueType> = HashMap<Int, ValueType>()
+    private val map: HashMap<Int, ValueType> = HashMap()
+
+    private val urimap: HashMap<Int, Uri?> = HashMap()
+
+    private val imageLoader = ImageLoader.getInstance()
 
     fun updateValue(music: Music){
         if(music.hashCode() in map.keys){
@@ -71,7 +83,7 @@ class ImageLoader{
                 }
                 return null
             } else {
-                val ds = getArtworkFromFile(MainActivity.getInstance(), music_id)
+                val ds = getFileDescriptorFromSongID(MainActivity.getInstance(), music_id)
                 if (ds != null) {
                     if(!map.containsKey(music.hashCode())) {
                         map.put(music.hashCode(), ValueType(false, ds))
@@ -86,7 +98,7 @@ class ImageLoader{
             }
         } else {
             if (!File(album_art).exists()) {
-                val ds = getArtworkFromFile(MainActivity.getInstance(), music_id)
+                val ds = getFileDescriptorFromSongID(MainActivity.getInstance(), music_id)
                 if (ds != null) {
                     if(!map.containsKey(music.hashCode())) {
                         map.put(music.hashCode(), ValueType(false, ds))
@@ -127,10 +139,10 @@ class ImageLoader{
         }
     }
 
-    private fun getArtworkFromFile(context: Context, songid: Long): FileDescriptor? {
+    private fun getFileDescriptorFromSongID(context: Context, songid: Long): FileDescriptor? {
         var ds: FileDescriptor? = null
         try {
-            val uri = Uri.parse("content://media/external/audio/media/$songid/albumart")
+            val uri = getUriFormSongID(songid)
             val pfd = context.contentResolver.openFileDescriptor(uri, "r")
             if (pfd != null) {
                 ds = pfd.fileDescriptor
@@ -142,8 +154,52 @@ class ImageLoader{
         return ds
     }
 
+    private fun getUriFormSongID(songid: Long): Uri{
+        return Uri.parse("content://media/external/audio/media/$songid/albumart")
+    }
 
-    private var lock = Object()
+    private fun getUriFromSystem(music: Music): Uri?{
+        if(urimap.containsKey(music.hashCode())){
+            return urimap.get(music.hashCode())
+        }
+        val projection = arrayOf("album_art")
+        var cur = MainActivity.getInstance().contentResolver.query(Uri.parse(mUriAlbums + "/" + music.album_id), projection, null, null, null)
+        var album_art: String? = null
+        if (cur != null && cur.count > 0 && cur.columnCount > 0) {
+            cur.moveToNext()
+            album_art = cur.getString(0)
+            cur.close()
+        }
+        cur = null
+        debug("Image path----->" + album_art)
+        val music_id = music.music_id
+        if (album_art == null || album_art == "") {
+            if (music_id < 0) {
+                if(!urimap.containsKey(music.hashCode())){
+                    urimap.put(music.hashCode(), null)
+                }
+                return null
+            } else {
+                var uri = getUriFormSongID(music_id)
+                urimap.put(music.hashCode(), uri)
+                return uri
+            }
+        } else {
+            if (!File(album_art).exists()) {
+                var uri = getUriFormSongID(music_id)
+                urimap.put(music.hashCode(), uri)
+                return uri
+            }
+            Log.v("path", album_art)
+            var uri = Uri.fromFile(File(album_art))
+            urimap.put(music.hashCode(), uri)
+            return uri
+        }
+    }
+
+
+   /* Didn't work......
+   private var lock = Object()
 
     private var mAllowLoad = true
 
@@ -193,35 +249,100 @@ class ImageLoader{
         synchronized (lock) {
             lock.notifyAll()
         }
+    }*/
+
+    private val imageLoaderListener = MyImageLoaderListener()
+
+    fun loadImage(musics: ArrayList<Music>, position: Int, imageView: ImageView) {
+        imageView.tag = position
+        if (imageLoaderListener.LoadList(position, musics)) {
+            imageLoader.displayImage(getUriFromSystem(musics[0]).toString(), imageView, options, imageLoaderListener)
+        }
     }
 
-    fun loadImage(t: Int, musics: ArrayList<Music>, mListener: OnImageLoadListener) {
+    fun setOnImageLoadListener(listener: OnImageLoadListener){
+        imageLoaderListener.setOnImageLoadListener(listener)
+    }
 
-        if(executeorService.isShutdown){
-            executeorService = Executors.newFixedThreadPool(1)
+    interface OnImageLoadListener{
+        fun OnImageLoaded(position: Int)
+        fun OnImageLoadFailed(position: Int)
+    }
+
+
+
+    private class MyImageLoaderListener : ImageLoadingListener{
+        private data class IndicatorIndex(val indivator: Int,var index: Int)
+        private var listener :OnImageLoadListener? = null
+        constructor(){}
+        fun setOnImageLoadListener(listener: OnImageLoadListener){
+            this.listener = listener
+        }
+        private val musics_map = Collections.synchronizedMap(HashMap<IndicatorIndex, ArrayList<Music>>())
+
+        fun LoadList(indicator: Int, musics: ArrayList<Music>):Boolean{
+            musics_map.put(IndicatorIndex(indicator, 0), musics)
+            return true
         }
 
-        executeorService.execute {
-            if (!mAllowLoad) {
-                synchronized (lock) {
-                    try {
-                        lock.wait()
-                    } catch (e: InterruptedException) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace()
+        fun DropList(){
+            musics_map.clear()
+        }
+
+        override fun onLoadingComplete(imageUri: String?, view: View?, loadedImage: Bitmap?) {
+            if(view != null) {
+                var img = view as ImageView
+                var indicator = view.tag as Int
+                if (loadedImage != null) {
+                    //img.setImageBitmap(loadedImage)\
+                    listener?.OnImageLoaded(indicator)
+                } else {
+                    var pair = musics_map.keys.find { it.indivator == indicator }
+                    if(pair != null){
+                        var list = musics_map.get(pair)
+                        var index = pair.index
+                        if(list != null && list.size - 1 > index){
+                            pair.index++
+                            var uri = MyImageLoader.getInstance().getUriFromSystem(list[0])
+                            ImageLoader.getInstance().displayImage(uri.toString(), img, options, this)
+                            return
+                        }
                     }
+                    img.setImageResource(R.drawable.choose)
+                    listener?.OnImageLoadFailed(indicator)
                 }
             }
-            if (mAllowLoad && firstLoad) {
-                loadImage(musics, t, mListener)
-            }
-            if (mAllowLoad && t <= mStopLoadLimit && t >= mStartLoadLimit) {
-                loadImage(musics, t, mListener)
+        }
+
+        override fun onLoadingCancelled(p0: String?, p1: View?) {
+            debug("canceled")
+        }
+
+        override fun onLoadingStarted(p0: String?, p1: View?) {
+            debug("started")
+        }
+
+        override fun onLoadingFailed(imageUri: String?, view: View?, failReason: FailReason?) {
+            if(view != null && failReason != null && failReason.type.equals(FailReason.FailType.IO_ERROR)){
+                var indicator = view.tag as Int
+                var pair = musics_map.keys.find { it.indivator == indicator }
+                if(pair != null){
+                    var list = musics_map.get(pair)
+                    var index = pair.index
+                    if(list != null && list.size - 1 > index){
+                        pair.index++
+                        var uri = MyImageLoader.getInstance().getUriFromSystem(list[0])
+                        ImageLoader.getInstance().displayImage(uri.toString(), view as ImageView, options, this)
+                        return
+                    }
+                }
+                (view as ImageView).setImageResource(R.drawable.choose)
+                listener?.OnImageLoadFailed(indicator)
             }
         }
     }
 
-    private fun loadImage(musics: ArrayList<Music>, mt: Int, mListener: OnImageLoadListener ) {
+    /*private fun loadImage(musics: ArrayList<Music>, mt: Int, mListener: OnImageLoadListener ) {
         for(music in musics) {
             var d = getDrawableFromCache(music)
             if (d != null) {
@@ -292,9 +413,9 @@ class ImageLoader{
             }
         }
         return null
-    }
+    }*/
 
-    fun addItem(music:Music, drawable: Drawable){
+    /*fun addItem(music:Music, drawable: Drawable){
         if(imageCache.size >= CACHE_LIMIT){
             var old_draw = imageCache[last_index].drawable!!.get()
             if(old_draw == null){
@@ -432,5 +553,5 @@ class ImageLoader{
         }
         // 目录此时为空，可以删除
         return dir.delete();
-    }
+    }*/
 }

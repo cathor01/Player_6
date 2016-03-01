@@ -50,6 +50,7 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.RemoteViews;
 
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 
 import java.io.File;
@@ -552,7 +553,7 @@ public class MainActivity extends ActionBarActivity {
 		toolbar.setTitleTextColor(0xffffffff);
 		toolbar.setSubtitleTextColor(0xffffffff);
 		//toolbar.setLogo(R.mipmap.ic_launcher);
-		setSubTitle("专辑列表");
+		//setSubTitle("专辑列表");
 		pColor = initColor;
 		setSupportActionBar(toolbar);
 		getSupportActionBar().setHomeButtonEnabled(true);
@@ -648,6 +649,12 @@ public class MainActivity extends ActionBarActivity {
 		drawerLayout.setDrawerListener(mDrawerToggle);
 	}
 
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		ImageLoader.getInstance().clearDiskCache();
+		ImageLoader.getInstance().clearMemoryCache();
+	}
 
 	@Override
 	protected void onPostCreate(Bundle savedInstanceState) {
@@ -661,11 +668,11 @@ public class MainActivity extends ActionBarActivity {
 		switch (requestCode) {
 			case FILE_SELECT:
 				if (resultCode == RESULT_OK) {
-					System.out.println("requestCode = [" + requestCode + "], data = [" + data + "]");
+					Logger.INSTANCE.d("requestCode = [" + requestCode + "], data = [" + data + "]");
 					Uri uri = data.getData();
 					filePath = getPath(this, uri);
 					try{
-                        ImageLoader.ValueType type = new ImageLoader.ValueType(true, filePath);
+                        MyImageLoader.ValueType type = new MyImageLoader.ValueType(true, filePath);
 						setBackGround(type, null);
 					}
 					catch(Exception e){}
@@ -717,7 +724,7 @@ public class MainActivity extends ActionBarActivity {
 	 *
 	 * @param valuetype 图片输入流
 	 */
-	public void setBackGround(ImageLoader.ValueType valuetype, Music music) {
+	public void setBackGround(MyImageLoader.ValueType valuetype, Music music) {
         Message msg = new Message();
         Bundle data = new Bundle();
 		if(music != null) {
@@ -965,7 +972,7 @@ public class MainActivity extends ActionBarActivity {
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fOut);
             fOut.flush();
         } catch (Exception e) {
-            Log.v("MainActivity", "文件无法创建s");
+            Log.v("MainActivity", "文件无法创建");
             e.printStackTrace();
         } finally {
             if (fOut != null) {
@@ -1022,7 +1029,7 @@ public class MainActivity extends ActionBarActivity {
 		protected void onPostExecute(String s) {
             music.setImg_path(s);
             ((MyApplication)MainActivity.getInstance().getApplication()).getDatamanager().UpdateAlbumPath(music);
-            ImageLoader.Companion.getInstance().updateValue(music);
+            MyImageLoader.Companion.getInstance().updateValue(music);
 		}
 	}
 

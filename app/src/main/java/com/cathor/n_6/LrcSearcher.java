@@ -169,7 +169,7 @@ public class LrcSearcher {
         }
         scanner1.close();
         String out = new String(sb1.toString().getBytes(), ENCODE);
-        System.out.println("out = " + out);
+        Logger.INSTANCE.d("out = " + out);
         JSONObject result = new JSONObject(new String(sb1.toString().getBytes(), ENCODE));
         try {
             JSONObject info = result.getJSONObject("lrc");
@@ -190,7 +190,7 @@ public class LrcSearcher {
             if (f.exists()) {
                 f.delete();
             }
-            System.out.println(f.toString());
+            Logger.INSTANCE.d(f.toString());
             f.createNewFile();
             FileOutputStream fout = new FileOutputStream(f);
             BufferedOutputStream outs = new BufferedOutputStream(fout);
@@ -270,7 +270,7 @@ public class LrcSearcher {
             if (f.exists()) {
                 f.delete();
             }
-            System.out.println(f.toString());
+            Logger.INSTANCE.d(f.toString());
             f.createNewFile();
             FileOutputStream fout = new FileOutputStream(f);
             BufferedOutputStream outs = new BufferedOutputStream(fout);

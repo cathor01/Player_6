@@ -1,7 +1,6 @@
 package com.cathor.n_6;
 
 import android.annotation.SuppressLint;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -20,11 +19,6 @@ import android.widget.TextView;
 
 import com.yalantis.phoenix.PullToRefreshView;
 
-import org.jetbrains.annotations.NotNull;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-
 
 public class AlbumFragment extends Fragment {
     private static AlbumFragment instance;
@@ -36,8 +30,20 @@ public class AlbumFragment extends Fragment {
     private PullToRefreshView refreshView;
 	private View view;
 	private BaseAdapter adapter;
-    private HashMap<Integer, Drawable> map = new HashMap<>();
-    private ImageLoader.OnImageLoadListener listener = new ImageLoader.OnImageLoadListener() {
+
+    private MyImageLoader.OnImageLoadListener listener = new MyImageLoader.OnImageLoadListener() {
+        @Override
+        public void OnImageLoaded(int position) {
+
+        }
+
+        @Override
+        public void OnImageLoadFailed(int position) {
+
+        }
+    };
+    // private HashMap<Integer, Drawable> map = new HashMap<>();
+	/*private MyImageLoader.OnImageLoadListener listener = new MyImageLoader.OnImageLoadListener() {
         @Override
         public void onImageLoad(int t, @NotNull Drawable drawable) {
             setImageViewDrawable(t, drawable);
@@ -47,7 +53,7 @@ public class AlbumFragment extends Fragment {
         public void onError(int t) {
             Log.d(this.getClass().toString(), t + "load failed");
         }
-    };
+    };*/
 
     public static AlbumFragment getInstance(){
         if(instance == null){
@@ -59,7 +65,7 @@ public class AlbumFragment extends Fragment {
         instance = this;
     }
 
-    public void setImageViewDrawable(int id, Drawable drawable){
+   /* public void setImageViewDrawable(int id, Drawable drawable){
         map.put(id, drawable);
         Message msg = new Message();
         Bundle data = new Bundle();
@@ -67,13 +73,14 @@ public class AlbumFragment extends Fragment {
         msg.setData(data);
         msg.what = 103;
         handler.sendMessage(msg);
-    }
+    }*/
 
 	@SuppressLint("ViewHolder") @Override
 	public View onCreateView(LayoutInflater tinflater,
 			@Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		inflater = tinflater;
 		albumList = MyService.getInstance().getAlbumList();
+        MyImageLoader.Companion.getInstance().setOnImageLoadListener(listener);
 		view = createView();
 		return view;
 	}
@@ -86,7 +93,7 @@ public class AlbumFragment extends Fragment {
 			switch (msg.what){
 				case 101:
 					albumList = MyService.getInstance().getAlbumList();
-					System.out.println("album is " + albumList.length);
+					Logger.INSTANCE.d("album is " + albumList.length);
 					list.setAdapter(createAdapter());
 					ViewGroup.LayoutParams params = list.getLayoutParams();
 					params.height = getPx(height) * albumList.length;
@@ -97,7 +104,7 @@ public class AlbumFragment extends Fragment {
                     MainActivity.getInstance().handler.sendEmptyMessage(304);
                     refreshView.setRefreshing(false);
                     break;
-                case 103:
+                /*case 103:
                     try {
                         int id = msg.getData().getInt("id");
                         ImageView img = ref.get(id);
@@ -105,7 +112,7 @@ public class AlbumFragment extends Fragment {
                         map.remove(id);
                     }
                     catch (Exception e){}
-                    break;
+                    break;*/
 			}
 		}
 	};
@@ -131,13 +138,14 @@ public class AlbumFragment extends Fragment {
 		t.start();
 	}
 
-    private ArrayList<ImageView> ref;
+    //private ArrayList<ImageView> ref;
 
 	private BaseAdapter createAdapter(){
-        if(ref != null) {
+        /*if(ref != null) {
             ref.clear();
         }
         ref = new ArrayList<>(albumList.length);
+		*/
 		BaseAdapter adapter = new BaseAdapter() {
 
 			@Override
@@ -157,19 +165,20 @@ public class AlbumFragment extends Fragment {
 				else{
 					album.setText(albumList[position].substring(albumList[position].lastIndexOf("/") + 1));
 				}
-				length.setText(MyService.getInstance().getArrayLength(albumList[position]) + "首");
+				length.setText(MyService.getInstance().getArrayLength(albumList[position]) + "首歌");
 				view.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         // TODO Auto-generated method stub
                         MyService.getInstance().setNewList(albumList[v.getId() - 2000]);
-                        System.out.println(albumList[v.getId() - 2000]);
+                        Logger.INSTANCE.d(albumList[v.getId() - 2000]);
                         MyFragment.updateView();
                         MainActivity.getInstance().jumpToMusic();
                     }
                 });
                 ImageView img = (ImageView)view.findViewById(R.id.album_img);
-                Log.e("Imag tests", img.toString());
+                MyImageLoader.Companion.getInstance().loadImage(MyService.getInstance().getArrayAt(albumList[position]), position,img);
+                Logger.INSTANCE.d(img.toString());
                 //ref.add(img);
                 return view;
 			}
@@ -201,7 +210,7 @@ public class AlbumFragment extends Fragment {
         //loader.getExecuteorService().shutdown();
         return adapter;
 	}
-	
+
 	private View createView(){
 		if(albumList == null || albumList.length == 0){
 			return inflater.inflate(R.layout.lyricinput, null);
@@ -223,7 +232,6 @@ public class AlbumFragment extends Fragment {
                         MainActivity.author_list = manager.GetAuthorData();
                         MainActivity.folder_list = manager.GetFolderData();
                         MainActivity.play_list = manager.GetListData();
-                        MainActivity.nowType = 0;
                         MyService.setMarray(MainActivity.getNowPlay());
                         handler.sendEmptyMessage(102);
                     }

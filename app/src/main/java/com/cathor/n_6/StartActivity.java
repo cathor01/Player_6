@@ -33,7 +33,7 @@ public class StartActivity extends Activity {
                 AsyncTask<Void, Void, Void> async = new AsyncTask<Void, Void, Void>(){
                     @Override
                     protected Void doInBackground(Void...params) {
-                        System.out.println("Hello");
+                        Logger.INSTANCE.d("Hello");
                         DataManager data_manager = ((MyApplication)getApplication()).GetDataManager();
                         MainActivity.album_list = data_manager.GetAlbumData();
                         MainActivity.author_list = data_manager.GetAuthorData();

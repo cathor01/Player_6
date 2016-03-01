@@ -103,7 +103,7 @@ public class Controller extends Fragment {
 				}
 
 			});
-			System.out.println("maxvalue:" + MyService.getInstance().getMaxTime());
+			Logger.INSTANCE.d("maxvalue:" + MyService.getInstance().getMaxTime());
 			va.addListener(new AnimatorListener() {
 				@Override
 				public void onAnimationStart(Animator animation) {
@@ -220,19 +220,19 @@ public class Controller extends Fragment {
 			}
 			try{
 				if(_service.getPlayStatewioutThrow()){
-					System.out.println("Play");
+					Logger.INSTANCE.d("Play");
 					handler.postDelayed(runnable, 1000);
 					play.setImageResource(R.drawable.pause);
 				}
 				else{
-					System.out.println("Pause");
+					Logger.INSTANCE.d("Pause");
 					handler.removeCallbacks(runnable);
 					play.setImageResource(R.drawable.play);
 				}
 			} catch(IllegalStateException e){
 				e.printStackTrace();
 				stopSeek();
-				System.out.println("Error Play");
+				Logger.INSTANCE.d("Error Play");
 				play.setImageResource(R.drawable.play);
 			}
 
@@ -328,13 +328,13 @@ public class Controller extends Fragment {
 				// TODO Auto-generated method stub
 				from.relative.setVisibility(View.INVISIBLE);
 				MusicInfo temp = from;
-				System.out.println("From--------->" + from.title.getText());
-				System.out.println("To  --------->" + to.title.getText());
+				Logger.INSTANCE.d("From--------->" + from.title.getText());
+				Logger.INSTANCE.d("To  --------->" + to.title.getText());
 				to.relative.setVisibility(View.VISIBLE);
 				from = to;
 				to = temp;
-				System.out.println("From--------->" + from.title.getText());
-				System.out.println("To  --------->" + to.title.getText());
+				Logger.INSTANCE.d("From--------->" + from.title.getText());
+				Logger.INSTANCE.d("To  --------->" + to.title.getText());
 				to.init();
 			}
 			
@@ -382,13 +382,13 @@ public class Controller extends Fragment {
 				// TODO Auto-generated method stub
 				from.relative.setVisibility(View.INVISIBLE);
 				MusicInfo temp = from;
-				System.out.println("From--------->" + from.title.getText());
-				System.out.println("To  --------->" + to.title.getText());
+				Logger.INSTANCE.d("From--------->" + from.title.getText());
+				Logger.INSTANCE.d("To  --------->" + to.title.getText());
 				to.relative.setVisibility(View.VISIBLE);
 				from = to;
 				to = temp;
-				System.out.println("From--------->" + from.title.getText());
-				System.out.println("To  --------->" + to.title.getText());
+				Logger.INSTANCE.d("From--------->" + from.title.getText());
+				Logger.INSTANCE.d("To  --------->" + to.title.getText());
 				to.init();
 			}
 			
@@ -450,7 +450,7 @@ public class Controller extends Fragment {
 			public void onStopTrackingTouch(SeekBar seekBar) {
 				if(MyService.getInstance().getPlayStatewioutThrow()) {
 					MyService.getInstance().setTime(seekBar.getProgress());
-					System.out.println("WTF@!");
+					Logger.INSTANCE.d("WTF@!");
 				}
 			}
 		});
@@ -488,13 +488,13 @@ public class Controller extends Fragment {
 		MyService _service = MyService.getInstance();
 		try{
 			if(_service.getPlayStatewioutThrow()){
-				System.out.println("path------->1");
+				Logger.INSTANCE.d("path------->1");
 				_service.pause();
 				MainActivity.getInstance().updateNotification(1);
 				return 2;
 			}
 			else{
-				System.out.println("path------->2");
+				Logger.INSTANCE.d("path------->2");
 				if(_service.getNowPlay() != -1){
 					handleMeg(MyService.PLAY, MyService.PLAY_NO_CHANGE);
 					return 1;
@@ -505,11 +505,11 @@ public class Controller extends Fragment {
 		}
 		catch(IllegalStateException e){
 			if(_service.getNowPlay() != -1){
-				System.out.println("path------->3");
+				Logger.INSTANCE.d("path------->3");
 				handleMeg(MyService.PLAY, MyService.PLAY_NO_CHANGE);
 				return 1;
 			}
-			System.out.println("path------->4");
+			Logger.INSTANCE.d("path------->4");
 			return 0;
 		}
 	}

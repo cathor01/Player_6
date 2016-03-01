@@ -162,7 +162,7 @@ public class LrcView extends View {
 		Matcher matcher = Pattern.compile("\\[.+\\].+").matcher(line);
 		// 如果形如：[xxx]后面啥也没有的，则return空
 		if (!matcher.matches()) {
-			System.out.println("throws " + line);
+			Logger.INSTANCE.d("throws " + line);
 			return null;
 		}
 
@@ -188,7 +188,7 @@ public class LrcView extends View {
 			// 那么现在就应该显示这个时间前面的对应的那一行
 			// 每次都重新显示，是不是要判断：现在正在显示就不刷新了
 			if (mTimes.get(i) > time && i >= mCurrentLine + 1) {
-				System.out.println("换");
+				Logger.INSTANCE.d("换");
 				mNextTime = mTimes.get(i);
 				mCurrentLine = i <= 1 ? 0 : i - 1;
 				postInvalidate();

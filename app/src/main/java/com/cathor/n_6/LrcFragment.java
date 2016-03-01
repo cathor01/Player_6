@@ -164,14 +164,14 @@ public class LrcFragment extends Fragment {
         Matcher matcher = Pattern.compile(".*\\[\\d+:\\d+\\.\\d+\\].*").matcher(line);
         // 如果形如：[xxx]后面啥也没有的，则return空
         if (!matcher.matches()) {
-            System.out.println("throw s " + line);
+            Logger.INSTANCE.d("throw s " + line);
             return null;
         }
         // 反感歌词里放[](ノ｀Д)ノ solved
         line = line.replaceAll("\\[(\\d+:\\d+\\.\\d+)\\]", "$1-#_#-");  // 但愿没有歌词里面不会出现这么堆符号凸(艹皿艹 )
         Map<Long, String>resultMap = new HashMap<>();
 
-        System.out.println(line);
+        Logger.INSTANCE.d(line);
         String[] result = line.split("-#_#-");
         int last = line.lastIndexOf("-#_#-");
         if(last != line.length() - 5) {
@@ -220,7 +220,7 @@ public class LrcFragment extends Fragment {
         BufferedReader reader;
 
         byte[] first3bytes=new byte[3];
-//   System.out.println("");
+//   Logger.INSTANCE.d("");
         //找到文档的前三个字节并自动判断文档类型。
         bis.read(first3bytes);
         bis.reset();
@@ -242,11 +242,11 @@ public class LrcFragment extends Fragment {
                     "utf-16be"));
         } else if (first3bytes[0] == (byte) 0xFF
                 && first3bytes[1] == (byte) 0xFF) {
-            //System.out.println("UTF-16le");
+            //Logger.INSTANCE.d("UTF-16le");
             reader = new BufferedReader(new InputStreamReader(bis,
                     "utf-16le"));
         } else {
-            //System.out.println("GBK");
+            //Logger.INSTANCE.d("GBK");
             reader = new BufferedReader(new InputStreamReader(bis, "GBK"));
         }
         if(isLrc) {
@@ -282,12 +282,12 @@ public class LrcFragment extends Fragment {
             }
             sortByShell(mTimes, mLrcs);
             reader.close();
-            updateView();
+            updateView();/*
             int height = preMargin - lyrics.get(0).getMeasuredHeight() / 2;
             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)layout.getLayoutParams();
             params.setMargins(0, height, 0, 0);
             layout.setLayoutParams(params);
-            preMargin = height;
+            preMargin = height;*/
             return 1;
         }
         String line ="";
@@ -312,7 +312,7 @@ public class LrcFragment extends Fragment {
                     int i = mCurrentLine - 1;
                     for (; i >= 0; i--) {
                         if (mTimes.get(i) < time && i <= mCurrentLine - 1) {
-                            System.out.println("前换");
+                            Logger.INSTANCE.d("前换");
                             Bundle bundle = new Bundle();
                             bundle.putInt("pre", mCurrentLine);
                             bundle.putInt("now", i);
@@ -350,7 +350,7 @@ public class LrcFragment extends Fragment {
 
                                 @Override
                                 public void onAnimationEnd(Animator animation) {
-                                    System.out.println("paddingTop: " + layout.getPaddingTop());
+                                    Logger.INSTANCE.d("paddingTop: " + layout.getPaddingTop());
                                     preMargin = parent.getMeasuredHeight() / 2 - changeHeight;
                                 }
 
@@ -378,7 +378,7 @@ public class LrcFragment extends Fragment {
                     }
                     if(i < 0 && mCurrentLine != 0){
                         i = 0;
-                        System.out.println("前换");
+                        Logger.INSTANCE.d("前换");
                         Bundle bundle = new Bundle();
                         bundle.putInt("pre", mCurrentLine);
                         bundle.putInt("now", i);
@@ -416,7 +416,7 @@ public class LrcFragment extends Fragment {
 
                             @Override
                             public void onAnimationEnd(Animator animation) {
-                                System.out.println("paddingTop: " + layout.getPaddingTop());
+                                Logger.INSTANCE.d("paddingTop: " + layout.getPaddingTop());
                                 preMargin = parent.getMeasuredHeight() / 2 - changeHeight;
                             }
 
@@ -449,7 +449,7 @@ public class LrcFragment extends Fragment {
                     // 那么现在就应该显示这个时间前面的对应的那一行
                     // 每次都重新显示，是不是要判断：现在正在显示就不刷新了
                     if (mTimes.get(i + 1) > time) {
-                        System.out.println("换");
+                        Logger.INSTANCE.d("换");
                         Bundle bundle = new Bundle();
                         bundle.putInt("pre", mCurrentLine);
                         bundle.putInt("now", i);
@@ -489,7 +489,7 @@ public class LrcFragment extends Fragment {
 
                             @Override
                             public void onAnimationEnd(Animator animation) {
-                                System.out.println("paddingTop: " + layout.getPaddingTop());
+                                Logger.INSTANCE.d("paddingTop : " + layout.getPaddingTop());
                                 preMargin = parent.getMeasuredHeight() / 2 - changeHeight;
                             }
 
@@ -518,7 +518,7 @@ public class LrcFragment extends Fragment {
                 }
                 if(i >= mTimes.size() - 1 && mCurrentLine != mTimes.size() - 1){
                     i = mTimes.size() - 1;
-                    System.out.println("换");
+                    Logger.INSTANCE.d("换");
                     Bundle bundle = new Bundle();
                     bundle.putInt("pre", mCurrentLine);
                     bundle.putInt("now", i);
@@ -558,7 +558,7 @@ public class LrcFragment extends Fragment {
 
                         @Override
                         public void onAnimationEnd(Animator animation) {
-                            System.out.println("paddingTop: " + layout.getPaddingTop());
+                            Logger.INSTANCE.d("paddingTop: " + layout.getPaddingTop());
                             preMargin = parent.getMeasuredHeight() / 2 - changeHeight;
                         }
 
@@ -636,8 +636,8 @@ public class LrcFragment extends Fragment {
             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)layout.getLayoutParams();
             params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
             params.width = ViewGroup.LayoutParams.MATCH_PARENT;
-            params.setMargins(0, parent.getMeasuredHeight() / 2, 0, 0);
-            preMargin = parent.getMeasuredHeight() / 2;
+            params.setMargins(0, parent.getMeasuredHeight() / 3, 0, 0);
+            preMargin = parent.getMeasuredHeight() / 3;
             layout.setLayoutParams(params);
             //layout.setPadding(layout.getPaddingLeft(), layout.getPaddingTop(), layout.getPaddingRight(), layout.getPaddingBottom());
             isPrepared = true;

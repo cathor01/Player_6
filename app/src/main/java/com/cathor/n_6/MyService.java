@@ -117,8 +117,8 @@ public class MyService extends Service{
 	private void setNewBackGround(){
 		if(MainActivity.getInstance()!= null){
 			Music music = array.get(nowPlay);
-			ImageLoader loader = ImageLoader.Companion.getInstance();
-			ImageLoader.ValueType valuetype = loader.getImageValue(music);
+			MyImageLoader loader = MyImageLoader.Companion.getInstance();
+			MyImageLoader.ValueType valuetype = loader.getImageValue(music);
 			if(valuetype == null){
 				MainActivity.getInstance().initBackGround();
 			}
@@ -132,6 +132,11 @@ public class MyService extends Service{
 		return nalbum;
 	}
 
+
+	/**
+	 * 设置新播放列表但不停止
+	 *
+	 * **/
 	public void setNewList(String talbum){
 		nalbum = talbum;
 		narray = map.get(talbum);
@@ -152,8 +157,9 @@ public class MyService extends Service{
 			setArray(talbum);
 			nowPlay = newNow;
 		}
-		System.out.println("nowPlaying------>" + nowPlay);
+		Logger.INSTANCE.d("nowPlaying------>" + nowPlay);
 	}
+
 	/**
 	 * 设置array，并更新length
 	 * 
@@ -175,7 +181,7 @@ public class MyService extends Service{
 	public static void setMarray(Map<String, ArrayList<Music>> tMarray){
 		map = tMarray;
 		Set<String> set = tMarray.keySet();
-		System.out.println(set.size());
+		Logger.INSTANCE.d(set.size());
 		albumArray = set.toArray(albumArray);
 		if(albumArray.length == 0){
 			array = new ArrayList<>();
@@ -193,17 +199,17 @@ public class MyService extends Service{
 	}
 
 	public void updateMarray(Map<String, ArrayList<Music>> tMarray){
-		System.out.println("tMarry is" + tMarray.size());
+		Logger.INSTANCE.d("tMarry is" + tMarray.size());
 		map = tMarray;
 		Set<String> set = tMarray.keySet();
-		System.out.println(set.size());
+		Logger.INSTANCE.d(set.size());
 		albumArray = new String[1];
 		albumArray = set.toArray(albumArray);
 		Arrays.sort(albumArray);
 		nalbum = albumArray[0];
 		narray = map.get(nalbum);
 	}
-	
+
 	public String getCurrentAlbum(){
 		return album;
 	}
@@ -235,7 +241,7 @@ public class MyService extends Service{
 			}
 		});
 		player.setOnPreparedListener(new PreparedListener());
-		System.out.println("Create the Srevice");
+		Logger.INSTANCE.d("Create the Srevice");
 		_service = this;
 		_bass = new BassBoost(0, player.getAudioSessionId());
 		SharedPreferences preferences = getSharedPreferences(MyApplication.Companion.getPREFERENCE_NAME(), Activity.MODE_PRIVATE);
@@ -251,7 +257,7 @@ public class MyService extends Service{
 	 * 获取当前播放状态
 	 * */
 	public boolean getPlayStatewioutThrow(){
-		System.out.println("is playing?");
+		Logger.INSTANCE.d("is playing?");
 		return player.isPlaying();
 	}
 		
@@ -336,10 +342,8 @@ public class MyService extends Service{
 	 * */
 	private int play(String tflag){
 		if(tflag.equals(PLAY_CHANGE_RESOURCE)){
-
-
 			player.reset();
-			System.out.println(getItemAt(nowPlay).getPath());
+			Logger.INSTANCE.d(getItemAt(nowPlay).getPath());
 			try {
 				player.setDataSource(getItemAt(nowPlay).getPath());
 				player.prepare();
@@ -350,7 +354,7 @@ public class MyService extends Service{
 			}
 
 		}
-		System.out.println("The World!!!");
+		Logger.INSTANCE.d("The World!!!");
 		try {
 
 			player.start();
@@ -367,7 +371,7 @@ public class MyService extends Service{
 		String path = getItemAt(getNowPlay()).getPath();
 		int i = path.lastIndexOf(".");
 		String lpath = path.substring(0, i+1) + "lrc";
-		System.out.println(lpath);
+		Logger.INSTANCE.d(lpath);
 		try {
 			if(TabAdapter.getLrcFragment().setLrcPath(lpath)!= 1) {
 				String filename = getItemAt(getNowPlay()).getAuthor() + "-" + getItemAt(getNowPlay()).getTitle() + ".lrc";
@@ -375,13 +379,13 @@ public class MyService extends Service{
 				filename = filename.replace("<", "");
 				filename = filename.replace(">", "");
 				String mpath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC) + "/../SimplePlayer/Lyrics/" + filename;
-				System.out.println(mpath);
+				Logger.INSTANCE.d(mpath);
 				if(1 != TabAdapter.getLrcFragment().setLrcPath(mpath)){
 					mpath = mpath.replace(".lrc", ".txt");
-					System.out.println(mpath);
+					Logger.INSTANCE.d(mpath);
 					if(1 != TabAdapter.getLrcFragment().setLrcPath(mpath)){
 						TabAdapter.getLrcFragment().noLrc();
-						System.out.println("啥都没有");
+						Logger.INSTANCE.d("啥都没有");
 					}
 					hasLyric = false;
 				}
@@ -397,7 +401,7 @@ public class MyService extends Service{
 			e.printStackTrace();
 		}
 		setNewBackGround();
-		System.out.println(getItemAt(nowPlay).getAlbum_id());
+		Logger.INSTANCE.d(getItemAt(nowPlay).getAlbum_id());
 		Controller.update();
 		return 1;
 	}
@@ -441,9 +445,9 @@ public class MyService extends Service{
 	 * */
 	public void moveToNext(){
 		MyFragment.change = 1;
-		System.out.println("nowPlay -p ------->" + getNowPlay());
+		Logger.INSTANCE.d("nowPlay -p ------->" + getNowPlay());
 		setNowPlay(album, (getNowPlay() + 1) % length);
-		System.out.println("nowPlay -l ------->" + getNowPlay());
+		Logger.INSTANCE.d("nowPlay -l ------->" + getNowPlay());
 		play(MyService.PLAY_CHANGE_RESOURCE);
 
 		MainActivity.getInstance().updateNotification(1);
@@ -454,7 +458,7 @@ public class MyService extends Service{
 	 * */
 	public void moveToNextWithoutRewind(){
 		MyFragment.change = 1;
-		System.out.println("nowPlay -p ------->" + getNowPlay());
+		Logger.INSTANCE.d("nowPlay -p ------->" + getNowPlay());
 		if(getNowPlay() < length - 1) {
 			setNowPlay(album, getNowPlay() + 1);
 		}
@@ -462,7 +466,7 @@ public class MyService extends Service{
 			MainActivity.getInstance().updateNotification(2);
 			return;
 		}
-		System.out.println("nowPlay -l ------->" + getNowPlay());
+		Logger.INSTANCE.d("nowPlay -l ------->" + getNowPlay());
 		play(MyService.PLAY_CHANGE_RESOURCE);
 
 		MainActivity.getInstance().updateNotification(1);
@@ -473,9 +477,9 @@ public class MyService extends Service{
 	 * */
 	public void moveToLast(){
 		MyFragment.change = 2;
-		System.out.println("nowPlay -p ------->" + getNowPlay());
+		Logger.INSTANCE.d("nowPlay -p ------->" + getNowPlay());
 		setNowPlay(album, (getNowPlay() - 1 + length) % length);
-		System.out.println("nowPlay -l ------->" + getNowPlay());
+		Logger.INSTANCE.d("nowPlay -l ------->" + getNowPlay());
 		play(MyService.PLAY_CHANGE_RESOURCE);
 
 		MainActivity.getInstance().updateNotification(1);
@@ -491,32 +495,32 @@ public class MyService extends Service{
 			if(bundle != null){
 				for(String key :bundle.keySet()){
 					String value = bundle.getString(key);
-					System.out.println("key------->"+key);
-					System.out.println("value----->"+value);
+					Logger.INSTANCE.d("key------->"+key);
+					Logger.INSTANCE.d("value----->"+value);
 					switch(key){
 					case SET_NOW:///未使用
 						setNowPlay(album, Integer.parseInt(value));
-						System.out.println("execute setNow");
+						Logger.INSTANCE.d("execute setNow");
 						break;
 					case STOP://未使用
 						stop();
-						System.out.println("execute stop");
+						Logger.INSTANCE.d("execute stop");
 						break;
 					case PAUSE://未使用
 						pause();
-						System.out.println("execute pause");
+						Logger.INSTANCE.d("execute pause");
 						break;
 					case PLAY:
 						play(value);
-						System.out.println("execute play");
+						Logger.INSTANCE.d("execute play");
 						break;
 					case MOVE_TO_NEXT: //未使用
 						moveToNext();
-						System.out.println("execute moveToNext");
+						Logger.INSTANCE.d("execute moveToNext");
 						break;
 					case FLAG: //未使用
 						setFlag(Integer.parseInt(value));
-						System.out.println("execute setFlag");
+						Logger.INSTANCE.d("execute setFlag");
 						break;
 					}
 				}
@@ -529,7 +533,7 @@ public class MyService extends Service{
 	public void onDestroy() {
 		// TODO Auto-generated method stub
 		super.onDestroy();
-		System.out.println("Destroy the Service");
+		Logger.INSTANCE.d("Destroy the Service");
 	}
 
 	@Override
