@@ -1,3 +1,4 @@
 include ':app'
 include ':libraries:MaterialProgress'
 include ':libraries:phoenix'
+include ':libraries:seekbar-compat'

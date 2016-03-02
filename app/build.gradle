@@ -1,6 +1,14 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-
+buildscript {
+    ext.kotlin_version = '1.0.0-rc-1036'
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.1"
@@ -10,7 +18,7 @@ android {
         minSdkVersion 15
         targetSdkVersion 23
         versionCode 9
-        versionName "0.5.0301"
+        versionName "0.5.0301.3"
     }
     buildTypes {
         release {
@@ -26,9 +34,12 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile project(':libraries:MaterialProgress')
+    compile project(':libraries:seekbar-compat')
     compile files('libs/systembartint-1.0.4.jar')
     compile files('libs/universal-image-loader-1.9.5.jar')
+    compile files('libs/pinyin4j-2.5.0.jar')
     compile 'com.android.support:support-v4:23.1.0'
+    compile 'com.gordonwong:material-sheet-fab:1.2.1'
     compile 'com.android.support:appcompat-v7:23.1.0'
     compile 'com.android.support:palette-v7:23.1.0'
     compile 'com.android.support:percent:23.1.0'
@@ -40,15 +51,7 @@ dependencies {
     compile 'org.jetbrains.anko:anko-support-v4:0.8.2' // In case you need support-v4 bindings
     compile 'org.jetbrains.anko:anko-appcompat-v7:0.8.2' // For appcompat-v7 bindings
 }
-buildscript {
-    ext.kotlin_version = '1.0.0-rc-1036'
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-    }
-}
+
 repositories {
     mavenCentral()
 }

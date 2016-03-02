@@ -1,6 +1,8 @@
 package com.cathor.n_6;
 
 import android.annotation.SuppressLint;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -192,17 +194,16 @@ public class MyFragment extends Fragment{
 	private static boolean state = false;
 	
 	public static void playMusic(boolean di){
-
-		if(!di){state = di;return;}
+		if(!di){state = false;return;}
 		if(state) {
 			if(MyService.getInstance().getNowPlay() != -1) {
 				try {
 					Controller.handleMeg(MyService.PLAY, MyService.PLAY_NO_CHANGE);
-				} catch (Exception e) {
+				} catch (Exception ignored) {
 				}
 			}
 		}
-		state = di;
+		state = true;
 	}
 
 
@@ -298,6 +299,7 @@ public class MyFragment extends Fragment{
 			}
 		};
 		list.setAdapter(adapter);
+		list.setDivider(new ColorDrawable(Color.TRANSPARENT));
 		list.setDividerHeight(getPx(4));
 		/*ViewGroup.LayoutParams params = list.getLayoutParams();
 		params.height = getPx(height) * array.size();

@@ -40,8 +40,8 @@ import java.util.regex.Pattern;
  */
 public class LrcFragment extends Fragment {
 
-    private List<String> mLrcs = new ArrayList<String>(); // 存放歌词
-    private List<Long> mTimes = new ArrayList<Long>(); // 存放时间
+    private List<String> mLrcs = new ArrayList<>(); // 存放歌词
+    private List<Long> mTimes = new ArrayList<>(); // 存放时间
 
     private long mNextTime = 0l; // 保存下一句开始的时间
     private long mCurrentTime = -1l;
@@ -184,8 +184,8 @@ public class LrcFragment extends Fragment {
 
         }
         else{
-            for (int i = 0; i < result.length; i++) {
-                resultMap.put(parseTime(result[i]), " ");
+            for (String aResult : result) {
+                resultMap.put(parseTime(aResult), " ");
             }
 
         }
@@ -209,12 +209,7 @@ public class LrcFragment extends Fragment {
             noLrc();
             return 0;
         }
-        if(path.endsWith(".lrc")){
-            isLrc = true;
-        }
-        else{
-            isLrc = false;
-        }
+        isLrc = path.endsWith(".lrc");
         BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file));
         bis.mark(4);
         BufferedReader reader;
@@ -250,7 +245,7 @@ public class LrcFragment extends Fragment {
             reader = new BufferedReader(new InputStreamReader(bis, "GBK"));
         }
         if(isLrc) {
-            String line = "";
+            String line;
             Map<Long, String> arr;
             int preSize = 0;
             while (null != (line = reader.readLine())) {
@@ -290,7 +285,7 @@ public class LrcFragment extends Fragment {
             preMargin = height;*/
             return 1;
         }
-        String line ="";
+        String line;
         mLrcs.add("TXT歌词不支持自动滚动");
         while((line =reader.readLine()) != null){
             mLrcs.add(line);
@@ -306,9 +301,8 @@ public class LrcFragment extends Fragment {
         // 直接return
         if(isPrepared && isLrc) {
             if (mNextTime > time) {
-                if (time > mCurrentTime) {
-                    return;
-                } else {
+                if (time > mCurrentTime) return;
+                else {
                     int i = mCurrentLine - 1;
                     for (; i >= 0; i--) {
                         if (mTimes.get(i) < time && i <= mCurrentLine - 1) {
@@ -331,7 +325,7 @@ public class LrcFragment extends Fragment {
                                 height = 0;
                             }
                             final int changeHeight = height + mDividerHeight * i;
-                            va = ValueAnimator.ofInt(preMargin, parent.getMeasuredHeight() / 2 - changeHeight);
+                            va = ValueAnimator.ofInt(preMargin, parent.getMeasuredHeight() / 3 - changeHeight);
                             va.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                                 @Override
                                 public void onAnimationUpdate(ValueAnimator animation) {
@@ -351,15 +345,15 @@ public class LrcFragment extends Fragment {
                                 @Override
                                 public void onAnimationEnd(Animator animation) {
                                     Logger.INSTANCE.d("paddingTop: " + layout.getPaddingTop());
-                                    preMargin = parent.getMeasuredHeight() / 2 - changeHeight;
+                                    preMargin = parent.getMeasuredHeight() / 3 - changeHeight;
                                 }
 
                                 @Override
                                 public void onAnimationCancel(Animator animation) {
                                     RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)layout.getLayoutParams();
-                                    params.setMargins(0,parent.getMeasuredHeight() / 2 - changeHeight,0, 0);
+                                    params.setMargins(0,parent.getMeasuredHeight() / 3 - changeHeight, 0, 0);
                                     layout.setLayoutParams(params);
-                                    preMargin = parent.getMeasuredHeight() / 2 - changeHeight;
+                                    preMargin = parent.getMeasuredHeight() / 3 - changeHeight;
                                     /*layout.setPadding(layout.getPaddingLeft(), parent.getMeasuredHeight() / 2 - changeHeight, layout.getPaddingRight(), layout.getPaddingBottom());*/
                                 }
 
@@ -397,7 +391,7 @@ public class LrcFragment extends Fragment {
                             height = 0;
                         }
                         final int changeHeight = height + mDividerHeight * i;
-                        va = ValueAnimator.ofInt(preMargin, parent.getMeasuredHeight() / 2 - changeHeight);
+                        va = ValueAnimator.ofInt(preMargin, parent.getMeasuredHeight() / 3 - changeHeight);
                         va.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                             @Override
                             public void onAnimationUpdate(ValueAnimator animation) {
@@ -417,15 +411,15 @@ public class LrcFragment extends Fragment {
                             @Override
                             public void onAnimationEnd(Animator animation) {
                                 Logger.INSTANCE.d("paddingTop: " + layout.getPaddingTop());
-                                preMargin = parent.getMeasuredHeight() / 2 - changeHeight;
+                                preMargin = parent.getMeasuredHeight() / 3 - changeHeight;
                             }
 
                             @Override
                             public void onAnimationCancel(Animator animation) {
                                 RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)layout.getLayoutParams();
-                                params.setMargins(0,parent.getMeasuredHeight() / 2 - changeHeight,0, 0);
+                                params.setMargins(0, parent.getMeasuredHeight() / 3 - changeHeight, 0, 0);
                                 layout.setLayoutParams(params);
-                                preMargin = parent.getMeasuredHeight() / 2 - changeHeight;
+                                preMargin = parent.getMeasuredHeight() / 3 - changeHeight;
                                     /*layout.setPadding(layout.getPaddingLeft(), parent.getMeasuredHeight() / 2 - changeHeight, layout.getPaddingRight(), layout.getPaddingBottom());*/
                             }
 
@@ -469,7 +463,7 @@ public class LrcFragment extends Fragment {
                             height = 0;
                         }
                         final int changeHeight = height + mDividerHeight * i;
-                        va = ValueAnimator.ofInt(preMargin, parent.getMeasuredHeight() / 2 - changeHeight);
+                        va = ValueAnimator.ofInt(preMargin, parent.getMeasuredHeight() / 3 - changeHeight);
 
                         va.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                             @Override
@@ -490,14 +484,14 @@ public class LrcFragment extends Fragment {
                             @Override
                             public void onAnimationEnd(Animator animation) {
                                 Logger.INSTANCE.d("paddingTop : " + layout.getPaddingTop());
-                                preMargin = parent.getMeasuredHeight() / 2 - changeHeight;
+                                preMargin = parent.getMeasuredHeight() / 3 - changeHeight;
                             }
 
                             @Override
                             public void onAnimationCancel(Animator animation) {
                                 RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)layout.getLayoutParams();
-                                params.setMargins(0, parent.getMeasuredHeight() / 2 - changeHeight, 0, 0);
-                                preMargin = parent.getMeasuredHeight() / 2 - changeHeight;
+                                params.setMargins(0, parent.getMeasuredHeight() / 3 - changeHeight, 0, 0);
+                                preMargin = parent.getMeasuredHeight() / 3 - changeHeight;
                                 layout.setLayoutParams(params);
                                 //layout.setPadding(layout.getPaddingLeft(), parent.getMeasuredHeight() / 2 - changeHeight, layout.getPaddingRight(), layout.getPaddingBottom());
                             }
@@ -526,7 +520,6 @@ public class LrcFragment extends Fragment {
                     msg.what = 1112;
                     msg.setData(bundle);
                     handler.sendMessage(msg);
-
                     int height = lyrics.get(0).getMeasuredHeight() / 2;
                     if(i >= 1){
                         for(int j = 1; j < i; j ++){
@@ -538,7 +531,7 @@ public class LrcFragment extends Fragment {
                         height = 0;
                     }
                     final int changeHeight = height + mDividerHeight * i;
-                    va = ValueAnimator.ofInt(preMargin, parent.getMeasuredHeight() / 2 - changeHeight);
+                    va = ValueAnimator.ofInt(preMargin, parent.getMeasuredHeight() / 3 - changeHeight);
 
                     va.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                         @Override
@@ -559,14 +552,14 @@ public class LrcFragment extends Fragment {
                         @Override
                         public void onAnimationEnd(Animator animation) {
                             Logger.INSTANCE.d("paddingTop: " + layout.getPaddingTop());
-                            preMargin = parent.getMeasuredHeight() / 2 - changeHeight;
+                            preMargin = parent.getMeasuredHeight() / 3 - changeHeight;
                         }
 
                         @Override
                         public void onAnimationCancel(Animator animation) {
                             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) layout.getLayoutParams();
-                            params.setMargins(0, parent.getMeasuredHeight() / 2 - changeHeight, 0, 0);
-                            preMargin = parent.getMeasuredHeight() / 2 - changeHeight;
+                            params.setMargins(0, parent.getMeasuredHeight() / 3 - changeHeight, 0, 0);
+                            preMargin = parent.getMeasuredHeight() / 3 - changeHeight;
                             layout.setLayoutParams(params);
                             //layout.setPadding(layout.getPaddingLeft(), parent.getMeasuredHeight() / 2 - changeHeight, layout.getPaddingRight(), layout.getPaddingBottom());
                         }
@@ -579,7 +572,6 @@ public class LrcFragment extends Fragment {
                     mCurrentLine = i;
                     int during = MyService.getInstance().getMaxTime() - MyService.getInstance().getNowPlayTime();
                     va.setDuration(during / 5);
-
                     handler.sendEmptyMessage(1111);
                 }
 
@@ -745,7 +737,6 @@ public class LrcFragment extends Fragment {
         Point size = new Point();
         wm.getDefaultDisplay().getSize(size);
         maxWidth = size.x * 9 / 10;
-
         parent = new RelativeLayout(context);
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         params.setMargins(5, 5, 5, 5);

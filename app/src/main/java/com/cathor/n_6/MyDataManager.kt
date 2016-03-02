@@ -1,6 +1,5 @@
 package com.cathor.n_6
 
-import android.R
 import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
@@ -10,7 +9,6 @@ import android.database.sqlite.SQLiteException
 import android.os.AsyncTask
 import android.provider.MediaStore
 import org.jetbrains.anko.async
-import org.jetbrains.anko.asyncResult
 import org.jetbrains.anko.toast
 import org.jetbrains.anko.uiThread
 import java.io.File
@@ -529,8 +527,8 @@ class MyDataManager : DataManager {
     }
 
     fun SortArrayList(list: ArrayList<Music>){
-        list.sortBy {
-            music -> music.title
+        list.sortBy{
+            it.music_id
         }
     }
 

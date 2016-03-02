@@ -3,6 +3,7 @@ package com.cathor.n_6;
 import android.animation.ValueAnimator;
 import android.animation.ValueAnimator.AnimatorUpdateListener;
 import android.annotation.TargetApi;
+import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.content.ActivityNotFoundException;
@@ -35,12 +36,13 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.Toolbar.OnMenuItemClickListener;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -64,9 +66,6 @@ import java.util.List;
 import java.util.Map;
 
 import static android.animation.ValueAnimator.ofFloat;
-import static android.app.Notification.FLAG_NO_CLEAR;
-import static android.app.PendingIntent.FLAG_CANCEL_CURRENT;
-import static android.app.PendingIntent.getActivity;
 import static android.content.ContentResolver.SCHEME_CONTENT;
 import static android.content.ContentResolver.SCHEME_FILE;
 import static android.content.Intent.ACTION_GET_CONTENT;
@@ -104,36 +103,13 @@ import static com.cathor.n_6.LrcSelect.setArray;
 import static com.cathor.n_6.MainActivity.FileUtils.getPath;
 import static com.cathor.n_6.MyFragment.pauseMusic;
 import static com.cathor.n_6.MyFragment.playMusic;
-import static com.cathor.n_6.R.color.systemBar_color;
-import static com.cathor.n_6.R.drawable.pause;
-import static com.cathor.n_6.R.drawable.play;
-import static com.cathor.n_6.R.drawable.top;
-import static com.cathor.n_6.R.id.backImg;
-import static com.cathor.n_6.R.id.controller;
-import static com.cathor.n_6.R.id.drawer;
-import static com.cathor.n_6.R.id.id_pager;
-import static com.cathor.n_6.R.id.list_left;
-import static com.cathor.n_6.R.id.lrc;
-import static com.cathor.n_6.R.id.main_percent;
-import static com.cathor.n_6.R.id.npause;
-import static com.cathor.n_6.R.id.ntitle;
-import static com.cathor.n_6.R.id.refresh;
-import static com.cathor.n_6.R.id.rmain;
-import static com.cathor.n_6.R.id.start;
-import static com.cathor.n_6.R.id.tool;
-import static com.cathor.n_6.R.layout.activity_main;
-import static com.cathor.n_6.R.layout.notification;
-import static com.cathor.n_6.R.mipmap.ic_launcher;
-import static com.cathor.n_6.R.string.drawer_close;
-import static com.cathor.n_6.R.string.drawer_open;
 import static com.cathor.n_6.TabAdapter.getLrcFragment;
 import static com.readystatesoftware.systembartint.SystemBarTintManager.SystemBarConfig;
 import static java.lang.Integer.MAX_VALUE;
-import static java.lang.System.currentTimeMillis;
 import static java.lang.System.out;
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends AppCompatActivity {
 	String filePath;
 	public String data;
 	public InputStream stream;
@@ -213,19 +189,7 @@ public class MainActivity extends ActionBarActivity {
 	 * @author 瑞凯
 	 */
 	public void updateNotification(int flag) {
-		if (MyService.getInstance().getNowPlay() != -1) {
-			remote.setTextViewText(ntitle, MyService.getInstance().getItemAt(MyService.getInstance().getNowPlay()).getTitle());
-			if (flag == 1) {
-				remote.setImageViewResource(npause, pause);
-				nm.notify(111, notifi);
-			} else if (flag == 2) {
-				remote.setImageViewResource(npause, play);
-				nm.cancel(111);
-			}
-		} else {
-			remote.setImageViewResource(npause, play);
-			nm.cancel(111);
-		}
+
 	}
 
 	/***
@@ -372,7 +336,7 @@ public class MainActivity extends ActionBarActivity {
 								getInstance().stream.close();
 								getInstance().stream = null;
 							}catch (IOException e){
-
+								e.printStackTrace();
 							}
                             Message msg = new Message();
                             msg.what = 202;
@@ -402,7 +366,7 @@ public class MainActivity extends ActionBarActivity {
 					System.gc();
 					break;
 				case 201:
-					getInstance().toolbar.getMenu().findItem(refresh).setVisible(true); //当音乐列表界面出现后方可刷新
+					getInstance().toolbar.getMenu().findItem(R.id.refresh).setVisible(true); //当音乐列表界面出现后方可刷新
 					break;
 				case 202:
 					//remote.setImageViewBitmap(R.id.album, nB);
@@ -419,7 +383,7 @@ public class MainActivity extends ActionBarActivity {
 					System.gc();
 					break;
 				case 203:
-					getInstance().toolbar.getMenu().findItem(lrc).setVisible(true);
+					getInstance().toolbar.getMenu().findItem(R.id.lrc).setVisible(true);
 				case 302:
 					AlbumFragment.getInstance().updateView();
 					MyFragment.updateView();
@@ -480,52 +444,52 @@ public class MainActivity extends ActionBarActivity {
 		inflater = this.getLayoutInflater();
 		activity = this;
 		registerHeadsetPlugReceiver();
-		View outer = from(this).inflate(activity_main, null);
+		View outer = from(this).inflate(R.layout.activity_main, null);
 		setContentView(outer);
-		drawerLayout = (DrawerLayout) findViewById(drawer);
-		final PercentRelativeLayout main = (PercentRelativeLayout) findViewById(main_percent);
-		background = (ImageView) main.findViewById(backImg);
+		drawerLayout = (DrawerLayout) findViewById(R.id.drawer);
+		final PercentRelativeLayout main = (PercentRelativeLayout) findViewById(R.id.main_percent);
+		background = (ImageView) main.findViewById(R.id.backImg);
 		height = background.getHeight();
-		mview = (ViewPager) main.findViewById(id_pager);
+		mview = (ViewPager) main.findViewById(R.id.id_pager);
 		mview.setAdapter(new TabAdapter(fm));
 		mview.setOffscreenPageLimit(3);
 		mview.setOnPageChangeListener(new OnPageChangeListener() {
 
-			@Override
-			public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
-			}
+            }
 
-			@Override
-			public void onPageSelected(int position) {
-				switch (position) {
-					case 0:
-						setSubTitle("主列表");
-						break;
-					case 1:
-						setSubTitle("音乐列表");
-						break;
-					case 2:
-						setSubTitle("同步歌词");
-						break;
-				}
-			}
+            @Override
+            public void onPageSelected(int position) {
+                switch (position) {
+                    case 0:
+                        setSubTitle("主列表");
+                        break;
+                    case 1:
+                        setSubTitle("音乐列表");
+                        break;
+                    case 2:
+                        setSubTitle("同步歌词");
+                        break;
+                }
+            }
 
-			@Override
-			public void onPageScrollStateChanged(int state) {
+            @Override
+            public void onPageScrollStateChanged(int state) {
 
-			}
-		});
-		notifi = new Notification(ic_launcher, "开始音乐", currentTimeMillis());
+            }
+        });
+		/*notifi = new Notification(R.mipmap.ic_launcher, "开始音乐", currentTimeMillis());  弃用的Notification
 		notifi.flags = FLAG_NO_CLEAR;
 		//RelativeLayout notiV = (RelativeLayout) inflater.inflate(notification, null);
-		remote = new RemoteViews(getPackageName(), notification);
+		remote = new RemoteViews(getPackageName(), R.layout.notification);
 		notifi.contentView = remote;
-		remote.setTextViewText(ntitle, "No Media");
-		remote.setImageViewResource(npause, play);
-		remote.setOnClickPendingIntent(rmain, getActivity(activity, 0, getIntent(), FLAG_CANCEL_CURRENT));
-		nm.notify(111, notifi);
-		actionBar = (FloatingActionButton) main.findViewById(start);
+		remote.setTextViewText(R.id.ntitle, "No Media");
+		remote.setImageViewResource(R.id.npause, R.drawable.play);
+		remote.setOnClickPendingIntent(R.id.rmain, getActivity(activity, 0, getIntent(), FLAG_CANCEL_CURRENT));
+		nm.notify(111, notifi);*/
+		actionBar = (FloatingActionButton) main.findViewById(R.id.start);
 		if (control == null) { //手动单例。。。。。。
 			control = new Controller(actionBar);
 		}
@@ -534,7 +498,7 @@ public class MainActivity extends ActionBarActivity {
 		if (f != null) {
 			ftt.remove(f);
 		}
-		ftt.replace(controller, control, "cont");
+		ftt.replace(R.id.controller, control, "cont");
 		ftt.commit();
 		AnimatorUpdateListener listener = new AnimatorUpdateListener() {
 
@@ -546,7 +510,7 @@ public class MainActivity extends ActionBarActivity {
 			}
 		};
 		va.addUpdateListener(listener);
-		toolbar = (Toolbar) drawerLayout.findViewById(main_percent).findViewById(tool); //Toolbar android.support.v7.Toolbar 使用
+		toolbar = (Toolbar) drawerLayout.findViewById(R.id.main_percent).findViewById(R.id.tool); //Toolbar android.support.v7.Toolbar 使用
 		//toolbar.getMenu().getItem(3).setVisible(false);
 		toolbar.setTitle("SimplePlayer");
 		toolbar.setBackgroundColor(initColor);
@@ -562,9 +526,9 @@ public class MainActivity extends ActionBarActivity {
 		if (SDK_INT == KITKAT || SDK_INT == KITKAT_WATCH) {
 			tintManager = new SystemBarTintManager(this);  //使用了第三方的库
 			tintManager.setStatusBarTintEnabled(true);  // 设置可沉浸
-			tintManager.setStatusBarTintResource(systemBar_color);  // 背景和Toolbar颜色相同
+			tintManager.setStatusBarTintResource(R.color.systemBar_color);  // 背景和Toolbar颜色相同
 			tintManager.setNavigationBarTintEnabled(true);
-			tintManager.setNavigationBarTintResource(systemBar_color);
+			tintManager.setNavigationBarTintResource(R.color.systemBar_color);
 			SystemBarConfig config = tintManager.getConfig();
 			outer.setPadding(0, config.getPixelInsetTop(true), 0, config.getPixelInsetBottom());  //　不然一块儿白
 		}
@@ -572,8 +536,8 @@ public class MainActivity extends ActionBarActivity {
 		mDrawerToggle = new ActionBarDrawerToggle(this,
 				drawerLayout,
 				toolbar,
-				drawer_open,  // 自定义的，不是很确定用处
-				drawer_close  // 同上
+                R.string.drawer_open,  // 自定义的，不是很确定用处
+				R.string.drawer_close  // 同上
 		) {
 
 			/** Called when a drawer has settled in a completely closed state. */
@@ -590,7 +554,7 @@ public class MainActivity extends ActionBarActivity {
 				// onPrepareOptionsMenu()
 			}
 		};
-		list = (NavigationView) drawerLayout.findViewById(list_left);
+		list = (NavigationView) drawerLayout.findViewById(R.id.list_left);
 		if (list != null) {
 			list.setNavigationItemSelectedListener(new OnNavigationItemSelectedListener() {
 				@Override
@@ -657,6 +621,17 @@ public class MainActivity extends ActionBarActivity {
 	}
 
 	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if(keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0){
+			AlertDialog dialog = new AlertDialog.Builder(this).setCancelable(false).create();
+			dialog.show();
+			Window window = dialog.getWindow();
+			window.setContentView(R.layout.exit_alert);
+		}
+		return super.onKeyDown(keyCode, event);
+	}
+
+	@Override
 	protected void onPostCreate(Bundle savedInstanceState) {
 		super.onPostCreate(savedInstanceState);
 		//handler.sendEmptyMessage(302);
@@ -675,7 +650,9 @@ public class MainActivity extends ActionBarActivity {
                         MyImageLoader.ValueType type = new MyImageLoader.ValueType(true, filePath);
 						setBackGround(type, null);
 					}
-					catch(Exception e){}
+					catch(Exception e){
+						e.printStackTrace();
+					}
 				}
 				break;
 			case LRC_INPUT:
@@ -871,7 +848,7 @@ public class MainActivity extends ActionBarActivity {
 	 */
 
 	public void initBackGround() {
-		background.setImageResource(top);
+		background.setImageResource(R.drawable.top);
 		changeColor(initColor, initDarkerColor);
 		pColor = initColor;
 		//remote.setImageViewResource(R.id.album, R.drawable.bg);
@@ -918,8 +895,7 @@ public class MainActivity extends ActionBarActivity {
 		Matrix matrix = new Matrix();
 		float width = bitmap.getWidth() > bitmap.getHeight() ? bitmap.getWidth() : bitmap.getHeight();
 		matrix.postScale(50 / width, 50 / width); //长和宽放大缩小的比例
-		Bitmap resizeBmp = createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
-		return resizeBmp;
+		return createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
 	}
 
 	@Override
@@ -989,13 +965,12 @@ public class MainActivity extends ActionBarActivity {
 		return (int) Math.round(Math.random() * (count));
 	}
 
-	private static String random_words = "abcdefghijklmnopqrstuvwxyz1234567890";
-
 	private static String getRandomString(int length){
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
+		String random_words = "abcdefghijklmnopqrstuvwxyz1234567890";
 		int len = random_words.length();
 		for (int i = 0; i < length; i++) {
-			sb.append(random_words.charAt(getRandom(len-1)));
+			sb.append(random_words.charAt(getRandom(len - 1)));
 		}
 		return sb.toString();
 	}
@@ -1056,7 +1031,7 @@ public class MainActivity extends ActionBarActivity {
 		public static String getPath(Context context, Uri uri) {
 			File fi = new File(uri.getPath());
 
-			if (null == uri) return null;
+			if (uri == null) return null;
 			final String scheme = uri.getScheme();
 			out.println();
 			String data = null;

@@ -1,44 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="100dp"
     android:layout_margin="0dp"
     android:background="@drawable/backgroundradius"
     >
-    <ImageView
+    <com.cathor.n_6.EditRoundImageView
         android:id="@+id/album_img"
         android:layout_height="match_parent"
         android:layout_width="100dp"
-        android:src="@drawable/choose"
+        android:src="@drawable/album_default"
         android:layout_alignParentLeft="true"
+        app:left_bottom_radius="3dp"
+        app:left_top_radius="3dp"
         android:layout_margin="0dp"
-        android:scaleType="fitXY"
         android:layout_alignParentTop="true"/>
     <TextView 
         android:id="@+id/album_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
-        android:singleLine="true"
-        android:maxWidth="300dp"
+        android:singleLine="false"
+        android:maxLines="2"
+        android:maxWidth="220dp"
         android:layout_toRightOf="@id/album_img"
-        android:layout_marginTop="20dp"
-        android:text="@string/button"
+        android:layout_marginTop="10dp"
+        android:text="ddddddddddddddddddddddddddddddddddd"
         android:clickable="true"
-        android:textSize="20sp"/>
+        android:textSize="16sp" />
     <TextView
         android:id="@+id/album_length"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
         android:singleLine="true"
-        android:maxWidth="300dp"
+        android:maxWidth="220dp"
         android:layout_toRightOf="@id/album_img"
         android:layout_marginBottom="20dp"
         android:layout_alignParentBottom="true"
         android:text="12首"
         android:clickable="true"
-        android:textSize="16sp"/>
-    
+        android:textSize="14sp"/>
+
 </RelativeLayout>

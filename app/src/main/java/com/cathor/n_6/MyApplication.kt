@@ -2,15 +2,9 @@ package com.cathor.n_6
 
 import android.app.Activity
 import android.app.Application
-import android.os.Environment
-import android.util.Log
-import com.nostra13.universalimageloader.cache.disc.impl.BaseDiskCache
-import com.nostra13.universalimageloader.cache.disc.impl.LimitedAgeDiskCache
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator
 import com.nostra13.universalimageloader.core.ImageLoader
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration
-import com.nostra13.universalimageloader.core.download.BaseImageDownloader
-import java.io.File
 
 /**
  * Created by Cathor on 2016/2/17.
@@ -24,6 +18,7 @@ class MyApplication : Application {
         val PREFERENCE_VIRTUAL_STATUS = "virtual_status"
         val PREFERENCE_VIRTUAL_VALUE = "virtual_value"
         val PREFERENCE_SKIP_VALUE = "skip_value"
+        val PREFERENCE_PLAY_MODE = "play_mode"
     }
 
 

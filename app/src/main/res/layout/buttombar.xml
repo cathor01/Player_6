@@ -7,7 +7,48 @@
     android:background= "#ff7744ff"
     android:elevation="3dp"
      >
-
+	<android.support.percent.PercentRelativeLayout
+		android:id="@+id/cscroll"
+		android:layout_width="0dp"
+		android:layout_height="0dp"
+		android:layout_alignParentBottom="true"
+		app:layout_widthPercent="100%"
+		app:layout_heightPercent="30%"
+		>
+		<app.minimize.com.seek_bar_compat.SeekBarCompat
+			android:id="@+id/seek"
+			android:layout_width="0dp"
+			app:layout_widthPercent="70%"
+			android:layout_height="wrap_content"
+			android:layout_centerInParent="true"
+			android:maxHeight="50dp"
+			app:progressColor="#fff"
+			app:progressBackgroundColor="#999"
+			android:max="100"
+			android:progress="20"
+			app:thumbColor="#fff"
+			app:thumbAlpha="1.0"/>
+		<TextView
+			android:id="@+id/nowt"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginLeft="10dp"
+			android:textColor="#ffffff"
+			android:layout_alignParentLeft="true"
+			android:layout_centerVertical="true"
+			android:textSize="15sp"
+			android:text="00:00"/>
+		<TextView
+			android:id="@+id/maxt"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginRight="10dp"
+			android:textColor="#ffffff"
+			android:layout_alignParentRight="true"
+			android:layout_centerVertical="true"
+			android:textSize="15sp"
+			android:text="00:00"/>
+	</android.support.percent.PercentRelativeLayout>
 
 	<RelativeLayout
 	    android:id="@+id/name"
@@ -92,45 +133,5 @@
 	        android:textColor="#ffffffff"
 	        android:textSize="17sp" />
 	</RelativeLayout>
-
-	<android.support.percent.PercentRelativeLayout
-		android:id="@+id/cscroll"
-		android:layout_width="0dp"
-		android:layout_height="0dp"
-		app:layout_widthPercent="100%"
-		app:layout_heightPercent="30%"
-		android:layout_below="@id/name"
-		android:layout_alignParentBottom="true"
-		>
-		<SeekBar
-			android:layout_centerInParent="true"
-			android:layout_width="0dp"
-			app:layout_widthPercent="70%"
-			android:layout_height="wrap_content"
-			android:id="@+id/seek"
-			android:progressDrawable="@drawable/player_setting_bright_progressbar"
-			android:thumb="@drawable/thumb_resources"
-			/>
-		<TextView
-			android:id="@+id/nowt"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_marginLeft="10dp"
-			android:textColor="#ffffff"
-			android:layout_alignParentLeft="true"
-			android:layout_centerVertical="true"
-			android:textSize="15sp"
-			android:text="00:00"/>
-		<TextView
-			android:id="@+id/maxt"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_marginRight="10dp"
-			android:textColor="#ffffff"
-			android:layout_alignParentRight="true"
-			android:layout_centerVertical="true"
-			android:textSize="15sp"
-			android:text="00:00"/>
-	</android.support.percent.PercentRelativeLayout>
 
 </android.support.percent.PercentRelativeLayout>

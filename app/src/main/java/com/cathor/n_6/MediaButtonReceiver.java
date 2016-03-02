@@ -16,11 +16,10 @@ public class MediaButtonReceiver extends BroadcastReceiver {
         // 获得Action
         String intentAction = intent.getAction();
         // 获得KeyEvent对象
-        KeyEvent keyEvent = (KeyEvent) intent
-                .getParcelableExtra(Intent.EXTRA_KEY_EVENT);
+        KeyEvent keyEvent = intent.getParcelableExtra(Intent.EXTRA_KEY_EVENT);
 
 
-        Log.i(TAG, "Action ---->" + intentAction + "  KeyEvent----->"
+        Log.i(TAG, "Action ---->" + intentAction + "  KeyEvent --->"
                 + keyEvent.toString());
         // 按下 / 松开 按钮
         int keyAction = keyEvent.getAction();

@@ -19,7 +19,7 @@ class CenterController(val context: Context, val preferences: SharedPreferences)
         }
         var edit = preferences.edit()
         edit.putBoolean(MyApplication.PREFERENCE_BASS_STATUS, status)
-        edit.commit()
+        edit.apply()
     }
 
     override fun OnControllerFinished() {
@@ -28,7 +28,7 @@ class CenterController(val context: Context, val preferences: SharedPreferences)
         edit.putInt(MyApplication.PREFERENCE_BASS_VALUE, MyService.getInstance().bassBoost.roundedStrength.toInt())
         edit.putBoolean(MyApplication.PREFERENCE_VIRTUAL_STATUS, MyService.getInstance().virtualizerState)
         edit.putInt(MyApplication.PREFERENCE_VIRTUAL_VALUE, MyService.getInstance().virtualizer.roundedStrength.toInt())
-        edit.commit()
+        edit.apply()
     }
 
     override fun OnBassSpain(percent: Int) {
@@ -42,7 +42,7 @@ class CenterController(val context: Context, val preferences: SharedPreferences)
         }
         var edit = preferences.edit()
         edit.putBoolean(MyApplication.PREFERENCE_VIRTUAL_STATUS, status)
-        edit.commit()
+        edit.apply()
     }
 
     override fun OnVIturalizationSpain(percent: Int) {

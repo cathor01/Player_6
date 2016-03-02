@@ -22,12 +22,14 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import app.minimize.com.seek_bar_compat.SeekBarCompat;
+
 
 public class Controller extends Fragment {
 	private static MusicInfo from;
 	private static MusicInfo to;
 	private static FloatingActionButton play;
-	private static SeekBar seek;
+	private static SeekBarCompat seek;
 	private static boolean playerHasInited = false;
 	private static TextView nowT;
 	private static TextView maxT;
@@ -205,7 +207,7 @@ public class Controller extends Fragment {
 		if(_service.getNowPlay() != -1){
 			if(MyFragment.change != 0){
 				handler.postDelayed(runnable, 1000);
-				String titleV = "";
+				String titleV;
 				titleV = _service.getItemAt(_service.getNowPlay()).getTitle();
 				String authorV = _service.getItemAt(_service.getNowPlay()).getAuthor();
 				if(MyFragment.change == 2){
@@ -429,7 +431,7 @@ public class Controller extends Fragment {
 		TextView title = (TextView)musicInfo.findViewById(R.id.title);
 		TextView author = (TextView)musicInfo.findViewById(R.id.author);
 		RelativeLayout temp = (RelativeLayout)relative.findViewById(R.id.cscroll);
-		seek = (SeekBar)temp.findViewById(R.id.seek);
+		seek = (SeekBarCompat)temp.findViewById(R.id.seek);
 		nowT = (TextView)temp.findViewById(R.id.nowt);
 		nowT.setClickable(false);
 

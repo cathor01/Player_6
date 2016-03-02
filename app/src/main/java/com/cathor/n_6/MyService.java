@@ -8,7 +8,6 @@ import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.media.audiofx.BassBoost;
 import android.media.audiofx.Virtualizer;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.IBinder;
@@ -27,11 +26,7 @@ public class MyService extends Service{
 
 	private BassBoost _bass;
 
-	private boolean bass_state;
-
 	private Virtualizer virtualizer;
-
-	private boolean virtual_state;
 
 	public static synchronized MyService getInstance(){
 		if(_service == null){
@@ -63,7 +58,6 @@ public class MyService extends Service{
 	private static ArrayList<Music> narray = null;
 	private static int nowPlay = -1; //正在播放曲目(初始为0)
 	private static int length = 0; //array长度
-	private static final Uri sArtworkUri = Uri.parse("content://media/external/audio/albumart");
 	/**
 	 * 获取正在播放曲目Id
 	 * */	
@@ -150,7 +144,7 @@ public class MyService extends Service{
 	 * 设置正在播放曲目id
 	 * */
 	public void setNowPlay(String talbum,int newNow){
-		if(talbum == album) {
+		if(talbum.equals(album)) {
 			nowPlay = newNow;
 		}
 		else{
@@ -189,7 +183,7 @@ public class MyService extends Service{
 			narray = new ArrayList<>();
 		}
 		else{
-			Arrays.sort(albumArray);
+			Arrays.sort(albumArray, new PinyinComparator<String>());
 			array = map.get(albumArray[0]);
 			nalbum = albumArray[0];
 			narray = map.get(nalbum);
@@ -234,18 +228,19 @@ public class MyService extends Service{
 		
 		player.setOnCompletionListener(new OnCompletionListener() {
 
-			@Override
-			public void onCompletion(MediaPlayer mp) {
-				// TODO Auto-generated method stub
-				playover();
-			}
-		});
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                // TODO Auto-generated method stub
+                playover();
+            }
+        });
 		player.setOnPreparedListener(new PreparedListener());
 		Logger.INSTANCE.d("Create the Srevice");
 		_service = this;
 		_bass = new BassBoost(0, player.getAudioSessionId());
 		SharedPreferences preferences = getSharedPreferences(MyApplication.Companion.getPREFERENCE_NAME(), Activity.MODE_PRIVATE);
 		_bass.setEnabled(preferences.getBoolean(MyApplication.Companion.getPREFERENCE_BASS_STATUS(), false));
+        flag = preferences.getInt(MyApplication.Companion.getPREFERENCE_PLAY_MODE(), 0);
 		_bass.setStrength((short) preferences.getInt(MyApplication.Companion.getPREFERENCE_BASS_VALUE(), 0));
 		virtualizer = new Virtualizer(0, player.getAudioSessionId());
 		virtualizer.setEnabled(preferences.getBoolean(MyApplication.Companion.getPREFERENCE_VIRTUAL_STATUS(), false));
@@ -390,7 +385,6 @@ public class MyService extends Service{
 					hasLyric = false;
 				}
 				else {
-
 					hasLyric = true;
 				}
 			}
@@ -433,6 +427,9 @@ public class MyService extends Service{
 	 * */
 	public void setFlag(int tflag){
 		flag = tflag;
+        SharedPreferences.Editor edit = getApplication().getSharedPreferences(MyApplication.Companion.getPREFERENCE_NAME(), Activity.MODE_PRIVATE).edit();
+        edit.putInt(MyApplication.Companion.getPREFERENCE_PLAY_MODE(), tflag);
+        edit.apply();
 	}
 	/**
 	 * 获取播放模式
@@ -495,8 +492,8 @@ public class MyService extends Service{
 			if(bundle != null){
 				for(String key :bundle.keySet()){
 					String value = bundle.getString(key);
-					Logger.INSTANCE.d("key------->"+key);
-					Logger.INSTANCE.d("value----->"+value);
+					Logger.INSTANCE.d("key------->" + key);
+					Logger.INSTANCE.d("value----->" + value);
 					switch(key){
 					case SET_NOW:///未使用
 						setNowPlay(album, Integer.parseInt(value));

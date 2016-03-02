@@ -34,7 +34,6 @@ class MyImageLoader {
         private val sArtworkUri = Uri.parse("content://media/external/audio/albumart")
         private val mUriAlbums = "content://media/external/audio/albums"
         private val options = DisplayImageOptions.Builder()
-                .displayer(RoundedBitmapDisplayer(10))//是否设置为圆角，弧度为多少
                 .bitmapConfig(Bitmap.Config.RGB_565)
                 .cacheInMemory(true)
                 .cacheOnDisk(true)
@@ -64,7 +63,6 @@ class MyImageLoader {
     }
 
     fun loadSystemImg(music: Music): ValueType?{
-        val uri = ContentUris.withAppendedId(sArtworkUri, music.album_id)
         val projection = arrayOf("album_art")
         var cur = MainActivity.getInstance().contentResolver.query(Uri.parse(mUriAlbums + "/" + music.album_id), projection, null, null, null)
         var album_art: String? = null
@@ -171,7 +169,7 @@ class MyImageLoader {
             cur.close()
         }
         cur = null
-        debug("Image path----->" + album_art)
+        debug("Image path------->" + album_art)
         val music_id = music.music_id
         if (album_art == null || album_art == "") {
             if (music_id < 0) {

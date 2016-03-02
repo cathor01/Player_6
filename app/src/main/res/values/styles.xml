@@ -12,6 +12,11 @@
         <item name="android:windowBackground">@android:color/white</item>
         <item name="android:windowActionBar">false</item>
         <item name="drawerArrowStyle">@style/AppTheme.DrawerArrowToggle</item>
+        <!--<item name="android:fastScrollThumbDrawable">@drawable/fastscroll_thumb_holo</item>
+        <item name="android:fastScrollOverlayPosition">atThumb</item>
+        <item name="android:fastScrollTextColor">#7744ff</item>
+        <item name="android:fastScrollTrackDrawable">@drawable/fastscroll_thumb_pressed_holo</item>
+        <item name="android:fastScrollPreviewBackgroundRight">@drawable/bg_default_focused_holo_light</item>-->
     </style>
 
     <style name="AppTheme.DrawerArrowToggle" parent="Base.Widget.AppCompat.DrawerArrowToggle">
@@ -29,7 +34,7 @@
     <style name="loading_dialog" parent="android:style/Theme.Dialog">
         <item name="android:windowFrame">@null</item>
         <item name="android:windowNoTitle">true</item>
-        <item name="android:windowBackground">@drawable/back</item>
+        <item name="android:windowBackground">@drawable/alert_back</item>
         <item name="android:windowIsFloating">true</item>
         <item name="android:windowContentOverlay">@null</item>
     </style>

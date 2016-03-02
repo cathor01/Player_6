@@ -1,6 +1,5 @@
 package com.cathor.n_6
 
-import android.app.Activity
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -10,19 +9,21 @@ import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.media.AudioManager
 import android.os.Bundle
-import android.os.Handler
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.view.View
 import android.widget.RelativeLayout
 import android.widget.TextView
-import org.jetbrains.anko.*
+import org.jetbrains.anko.backgroundColor
+import org.jetbrains.anko.dip
+import org.jetbrains.anko.margin
+import org.jetbrains.anko.textColor
 
 /**
  * Created by Cathor on 2016/2/15.
  */
 
-open public class MediaController : AppCompatActivity(), Knob.OnScollListener, View.OnClickListener, InMediaController {
+open class MediaController : AppCompatActivity(), Knob.OnScollListener, View.OnClickListener, InMediaController {
 
     override var listener: MediaControllerListener? = null
     override fun onClick(p0: View?) {
@@ -100,7 +101,7 @@ open public class MediaController : AppCompatActivity(), Knob.OnScollListener, V
     companion object {
         var audioManager: AudioManager? = null
         private var _instance : MediaController? = null
-        public fun getInstance(): MediaController?{
+        fun getInstance(): MediaController?{
             return MediaController._instance;
         }
     }
@@ -147,7 +148,7 @@ open public class MediaController : AppCompatActivity(), Knob.OnScollListener, V
         toolb.id = 991101
         toolb.backgroundColor = this.getIntent().extras.getLong("Color").toInt()
         toolb.minimumHeight = dip(25)
-        toolb.setTitle("设置")
+        toolb.title = "音效设置"
         toolb.setTitleTextColor(Color.WHITE)
         toolb.setNavigationIcon(R.mipmap.abc_ic_ab_back_mtrl_am_alpha)
         var params_tool = RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT)

@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="60dp"
     android:id="@+id/rmain"
-    android:background="@drawable/back"
+    android:background="@drawable/alert_back"
     android:orientation="vertical" >
 	
     <ImageView

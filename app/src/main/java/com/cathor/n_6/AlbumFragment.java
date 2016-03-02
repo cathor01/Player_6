@@ -1,6 +1,8 @@
 package com.cathor.n_6;
 
 import android.annotation.SuppressLint;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -159,13 +161,13 @@ public class AlbumFragment extends Fragment {
 				album.setClickable(false);
 				view.setLayoutParams(new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, getPx(height - 4)));
 				view.setClickable(true);
-				if(MainActivity.getInstance().nowType != 2) {
+				if(MainActivity.nowType != 2) {
 					album.setText(albumList[position]);
 				}
 				else{
 					album.setText(albumList[position].substring(albumList[position].lastIndexOf("/") + 1));
 				}
-				length.setText(MyService.getInstance().getArrayLength(albumList[position]) + "首歌");
+				length.setText("共" + MyService.getInstance().getArrayLength(albumList[position]) + "首");
 				view.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -246,6 +248,7 @@ public class AlbumFragment extends Fragment {
         refreshView.addView(list);
 		adapter = createAdapter();
 		list.setAdapter(adapter);
+        list.setDivider(new ColorDrawable(Color.TRANSPARENT));
 		list.setDividerHeight(getPx(4));
 		layout.setPadding(px, 0, px, 0);
 		hascreated = true;
