@@ -464,15 +464,6 @@ public class Controller extends Fragment {
 		TextView author1 = (TextView)musicInfo1.findViewById(R.id.author1);
 		to = new MusicInfo(musicInfo1, title1, author1);
 		update();
-		play.setOnLongClickListener(new View.OnLongClickListener() {
-			@Override
-			public boolean onLongClick(View v) {
-				MyService.getInstance().setFlag((MyService.getInstance().getFlag() + 1) % 4);
-				update();
-				toastInfo();
-				return true;
-			}
-		});
 		play.setOnClickListener(new OnClickListener() {
 			
 			@Override

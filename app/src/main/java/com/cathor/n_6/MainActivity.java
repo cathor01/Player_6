@@ -17,6 +17,7 @@ import android.content.res.ColorStateList;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
@@ -28,7 +29,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.percent.PercentRelativeLayout;
 import android.support.v4.app.Fragment;
@@ -109,7 +109,7 @@ import static java.lang.Integer.MAX_VALUE;
 import static java.lang.System.out;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 	String filePath;
 	public String data;
 	public InputStream stream;
@@ -148,12 +148,13 @@ public class MainActivity extends AppCompatActivity {
 	private ActionBarDrawerToggle mDrawerToggle;
 	private SystemBarTintManager tintManager;
 	private NavigationView list;
-
+	private MyMaterialSheetFab materialSheetFab;
 	public static Map<String, ArrayList<Music>> album_list;
 	public static Map<String, ArrayList<Music>> author_list;
 	public static Map<String, ArrayList<Music>> folder_list;
 	public static Map<String, ArrayList<Music>> play_list;
-	private FloatingActionButton actionBar;
+    private View now_select_item;
+	private Fabs actionBar;
 	public static int nowType = 0;
 
 	private static final int ALBUM_LIST = 0;
@@ -489,8 +490,33 @@ public class MainActivity extends AppCompatActivity {
 		remote.setImageViewResource(R.id.npause, R.drawable.play);
 		remote.setOnClickPendingIntent(R.id.rmain, getActivity(activity, 0, getIntent(), FLAG_CANCEL_CURRENT));
 		nm.notify(111, notifi);*/
-		actionBar = (FloatingActionButton) main.findViewById(R.id.start);
-		if (control == null) { //手动单例。。。。。。
+		actionBar = (Fabs) main.findViewById(R.id.start);
+		View sheetView = findViewById(R.id.fab_sheet);
+		View overlay = findViewById(R.id.dim_overlay);
+		int fabColor = 0xff4f2DAA;
+		int sheetColor = getResources().getColor(R.color.background_material_light);
+		materialSheetFab = new MyMaterialSheetFab(actionBar, sheetView, overlay, sheetColor, fabColor, null);
+        findViewById(R.id.item_play_all).setOnClickListener(this);
+        findViewById(R.id.item_repeat_all).setOnClickListener(this);
+        findViewById(R.id.item_repeat_one).setOnClickListener(this);
+        findViewById(R.id.item_random).setOnClickListener(this);
+        int now_flag = getApplication().getSharedPreferences(MyApplication.Companion.getPREFERENCE_NAME(), MODE_PRIVATE).getInt(MyApplication.Companion.getPREFERENCE_PLAY_MODE(), 0);
+        switch (now_flag){
+            case 0:
+                now_select_item = findViewById(R.id.item_play_all);
+                break;
+            case 1:
+                now_select_item = findViewById(R.id.item_repeat_all);
+                break;
+            case 2:
+                now_select_item = findViewById(R.id.item_repeat_one);
+                break;
+            case 3:
+                now_select_item = findViewById(R.id.item_random);
+                break;
+        }
+        now_select_item.setBackgroundColor(0x77777777);
+        if (control == null) { //手动单例。。。。。。
 			control = new Controller(actionBar);
 		}
 		FragmentTransaction ftt = fm.beginTransaction();
@@ -614,6 +640,15 @@ public class MainActivity extends AppCompatActivity {
 	}
 
 	@Override
+	public void onBackPressed() {
+		if (materialSheetFab.isSheetVisible()) {
+			materialSheetFab.hideSheet();
+		} else {
+			super.onBackPressed();
+		}
+	}
+
+	@Override
 	protected void onDestroy() {
 		super.onDestroy();
 		ImageLoader.getInstance().clearDiskCache();
@@ -623,10 +658,14 @@ public class MainActivity extends AppCompatActivity {
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if(keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0){
-			AlertDialog dialog = new AlertDialog.Builder(this).setCancelable(false).create();
-			dialog.show();
-			Window window = dialog.getWindow();
-			window.setContentView(R.layout.exit_alert);
+			if (materialSheetFab.isSheetVisible()) {
+				materialSheetFab.hideSheet();
+			}else {
+				AlertDialog dialog = new AlertDialog.Builder(this).setCancelable(false).create();
+				dialog.show();
+				Window window = dialog.getWindow();
+				window.setContentView(R.layout.exit_alert);
+			}
 		}
 		return super.onKeyDown(keyCode, event);
 	}
@@ -770,8 +809,6 @@ public class MainActivity extends AppCompatActivity {
 	}
 
 	public void changeColor(int mcolor, int mdarker) {
-
-
 		final int from = pColor;
 		int to = mcolor; // new color to animate to
 
@@ -967,7 +1004,7 @@ public class MainActivity extends AppCompatActivity {
 
 	private static String getRandomString(int length){
 		StringBuilder sb = new StringBuilder();
-		String random_words = "abcdefghijklmnopqrstuvwxyz1234567890";
+		String random_words = "ASDFGHJKLPOIUYTREWQZXCVBNM1234567890";
 		int len = random_words.length();
 		for (int i = 0; i < length; i++) {
 			sb.append(random_words.charAt(getRandom(len - 1)));
@@ -975,7 +1012,34 @@ public class MainActivity extends AppCompatActivity {
 		return sb.toString();
 	}
 
-	/**
+    @Override
+    public void onClick(View v) {
+        int value;
+        switch(v.getId()){
+            case R.id.item_play_all:
+                value = 0;
+                break;
+            case R.id.item_repeat_all:
+                value = 1;
+                break;
+            case R.id.item_repeat_one:
+                value = 2;
+                break;
+            case R.id.item_random:
+                value = 3;
+                break;
+            default:
+                return;
+        }
+        now_select_item.setBackgroundColor(Color.TRANSPARENT);
+        MyService.getInstance().setFlag(value);
+        v.setBackgroundColor(0x77777777);
+        Controller.update();
+		materialSheetFab.hideSheet();
+        now_select_item = v;
+    }
+
+    /**
      * @author victor_freedom (x_freedom_reddevil@126.com)
 	 * @createddate 2015-1-31 下午11:39:18
 	 * @Description: 缓存图片，返回一个bitmap对象

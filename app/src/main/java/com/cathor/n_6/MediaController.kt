@@ -60,7 +60,7 @@ open class MediaController : AppCompatActivity(), Knob.OnScollListener, View.OnC
     private class MyVolumeReceiver : BroadcastReceiver() {
         override fun onReceive(context:Context, intent : Intent) {
             //如果音量发生变化则更改seekbar的位置
-            if(intent.getAction().equals("android.media.VOLUME_CHANGED_ACTION")){
+            if(intent.action.equals("android.media.VOLUME_CHANGED_ACTION")){
                 var currVolume = audioManager?.getStreamVolume(AudioManager.STREAM_MUSIC) ;// 当前的媒体音量
                 if(currVolume != null){
                     MediaController.getInstance()?.volumn_knob?.SetPercentage(currVolume)
@@ -125,19 +125,19 @@ open class MediaController : AppCompatActivity(), Knob.OnScollListener, View.OnC
         var bass_state = MyService.getInstance().bassBoostState
         var bass_value = if(bass_state) MyService.getInstance().bassBoost.roundedStrength.toInt() else 0
         var bass_knob = Knob(this, back, off, on, on.width, back.width, 155.0f, 1000, bass_state)
-        bass_knob.setTag(bass_knob_tag)
+        bass_knob.tag = bass_knob_tag
         bass_knob.id = 991110
         bass_knob.SetPercentage(bass_value)
         var virtual_state = MyService.getInstance().virtualizerState
         var virtual_value = if(bass_state) MyService.getInstance().virtualizer.roundedStrength.toInt() else 0
         var virtual_knob = Knob(this, back, off, on, on.width, back.width, 155.0f, 1000, virtual_state)
-        virtual_knob.setTag(virtual_knob_tag)
+        virtual_knob.tag = virtual_knob_tag
         virtual_knob.id = 991120
         if(virtual_state){
             virtual_knob.SetPercentage(virtual_value)
         }
         var volumn_knob = Knob(this, back, on, on.width, back.width, 155.0f, maxVolume)
-        volumn_knob.setTag(volumn_knob_tag)
+        volumn_knob.tag = volumn_knob_tag
         volumn_knob.SetPercentage(currentVolume)
         volumn_knob.id = 991130
         this.volumn_knob = volumn_knob
@@ -146,7 +146,7 @@ open class MediaController : AppCompatActivity(), Knob.OnScollListener, View.OnC
         var toolb = Toolbar(this)
         toolb.elevation = dip(5).toFloat()
         toolb.id = 991101
-        toolb.backgroundColor = this.getIntent().extras.getLong("Color").toInt()
+        toolb.backgroundColor = this.intent.extras.getLong("Color").toInt()
         toolb.minimumHeight = dip(25)
         toolb.title = "音效设置"
         toolb.setTitleTextColor(Color.WHITE)

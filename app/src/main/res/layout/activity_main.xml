@@ -7,7 +7,8 @@
 	android:fitsSystemWindows="true"
 	tools:context="com.cathor.n_5.MainActivity"
 	android:layout_width="match_parent"
-	android:layout_height="match_parent">
+	android:layout_height="match_parent"
+	xmlns:card_view="http://schemas.android.com/apk/res-auto">
 	<android.support.v4.widget.DrawerLayout
 		android:id="@+id/drawer"
 		android:layout_width="match_parent"
@@ -43,7 +44,6 @@
 				android:layout_below="@id/tool"
 				app:layout_heightPercent="70%"
 				app:layout_widthPercent="100%"
-				android:elevation="1dp"
 				android:scaleType="centerCrop"
 				android:src="@drawable/top"
 				android:layout_marginTop="2dp"
@@ -57,46 +57,37 @@
 				app:layout_heightPercent="70%"
 				app:layout_widthPercent="100%"
 				android:alpha="30"
-				android:layout_weight="1"
-				android:layout_marginTop="2dp"
-				android:elevation="2dp" />
+				android:layout_marginTop="2dp" />
 
 
+            <!--Controller页面-->
+            <FrameLayout
+                android:id="@+id/controller"
+                android:layout_marginTop="0dp"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_heightPercent="20%"
+                app:layout_widthPercent="100%"
+                android:layout_alignParentBottom="true"
+                android:layout_margin="0dp"/>
 
-			<!-- <FrameLayout
-				android:id="@+id/frag"
-				android:layout_width="match_parent"
-				android:layout_height="431dp"
-				android:layout_below="@id/tool"
-				android:layout_margin="0dp"
-				android:elevation="2dp"
-				android:layout_marginTop="2dp"
-				/> -->
+            <!--FloatActionBar-->
+            <com.cathor.n_6.Fabs
+                android:id="@+id/start"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignTop="@id/controller"
+                android:src="@drawable/play"
+                android:layout_marginTop="-30dp"
+                android:layout_marginRight="10dp"
+                app:backgroundTint="#4f2DAA"
+                app:fabSize="normal"
+                app:elevation="10dp"
+                app:rippleColor="#000000"
+                />
 
-			<FrameLayout
-				android:id="@+id/controller"
-				android:layout_marginTop="0dp"
-				android:elevation="3dp"
-				android:layout_width="0dp"
-				android:layout_height="0dp"
-				app:layout_heightPercent="20%"
-				app:layout_widthPercent="100%"
-				android:layout_alignParentBottom="true"
-				android:layout_margin="0dp"/>
-			<android.support.design.widget.FloatingActionButton
-				android:id="@+id/start"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_alignParentRight="true"
-				android:layout_alignTop="@id/controller"
-				android:src="@drawable/play"
-				android:layout_marginTop="-30dp"
-				android:layout_marginRight="10dp"
-				app:backgroundTint="#4f2DAA"
-				app:fabSize="normal"
-				app:elevation="10dp"
-				app:rippleColor="#000000"
-				/>
+
 		</android.support.percent.PercentRelativeLayout>
 		<android.support.design.widget.NavigationView
 			android:id="@+id/list_left"
@@ -107,5 +98,70 @@
 			app:headerLayout="@layout/drawer_layout"
 			app:menu="@menu/drawer"
 			android:background="@drawable/back_color"/>
+
+        <!-- Overlay that dims the screen -->
+        <com.gordonwong.materialsheetfab.DimOverlayFrameLayout
+            android:id="@+id/dim_overlay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <!-- Circular reveal container for the sheet -->
+        <io.codetail.widget.RevealLinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="end|bottom"
+            android:orientation="vertical">
+
+            <!-- Sheet that contains your items -->
+            <android.support.v7.widget.CardView
+                android:id="@+id/fab_sheet"
+                android:layout_width="150dp"
+                android:layout_height="200dp"
+                android:layout_marginBottom="30dp"
+                android:layout_marginRight="10dp"
+                android:elevation="5dp"
+                style="@style/Widget.MaterialSheetFab.Sheet"
+                >
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <TextView
+                        android:id="@+id/item_play_all"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        style="@style/TextAppearance.MaterialSheetFab.Sheet.Item"
+                        android:text="@string/play_all"/>
+                    <TextView
+                        android:id="@+id/item_repeat_all"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        style="@style/TextAppearance.MaterialSheetFab.Sheet.Item"
+                        android:text="@string/repeat_all"/>
+                    <TextView
+                        android:id="@+id/item_repeat_one"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        style="@style/TextAppearance.MaterialSheetFab.Sheet.Item"
+                        android:text="@string/repeat_one"/>
+                    <TextView
+                        android:id="@+id/item_random"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        style="@style/TextAppearance.MaterialSheetFab.Sheet.Item"
+                        android:text="@string/random"/>
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+        </io.codetail.widget.RevealLinearLayout>
 	</android.support.v4.widget.DrawerLayout>
 </RelativeLayout>

@@ -20,4 +20,9 @@
     <string name="gaoyin">高音</string>
     <string name="liti">立体声</string>
     <string name="media_title">音效设置</string>
+
+    <string name="repeat_all">循环播放</string>
+    <string name="repeat_one">单曲循环</string>
+    <string name="play_all">顺序播放</string>
+    <string name="random">随机播放</string>
 </resources>
