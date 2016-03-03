@@ -65,6 +65,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import cn.cathor.selfview.BubblePagerIndicator;
+
 import static android.animation.ValueAnimator.ofFloat;
 import static android.content.ContentResolver.SCHEME_CONTENT;
 import static android.content.ContentResolver.SCHEME_FILE;
@@ -88,7 +90,6 @@ import static android.os.Build.VERSION_CODES.LOLLIPOP;
 import static android.provider.BaseColumns._ID;
 import static android.provider.MediaStore.MediaColumns.DATA;
 import static android.support.design.widget.NavigationView.OnNavigationItemSelectedListener;
-import static android.support.v4.view.ViewPager.OnPageChangeListener;
 import static android.support.v7.graphics.Palette.Builder;
 import static android.telephony.TelephonyManager.ACTION_PHONE_STATE_CHANGED;
 import static android.util.Log.v;
@@ -454,8 +455,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 		mview = (ViewPager) main.findViewById(R.id.id_pager);
 		mview.setAdapter(new TabAdapter(fm));
 		mview.setOffscreenPageLimit(3);
-		mview.setOnPageChangeListener(new OnPageChangeListener() {
-
+        BubblePagerIndicator bubblePagerIndicator = (BubblePagerIndicator)main.findViewById(R.id.bubble_indicator);
+		mview.addOnPageChangeListener(bubblePagerIndicator);
+        mview.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
@@ -481,6 +483,34 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             }
         });
+        bubblePagerIndicator.setViewPager(mview);
+		/*mview.setOnPageChangeListener(new OnPageChangeListener() {
+
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+				System.out.println("position = [" + position + "], positionOffset = [" + positionOffset + "], positionOffsetPixels = [" + positionOffsetPixels + "]");
+			}
+
+            @Override
+            public void onPageSelected(int position) {
+                switch (position) {
+                    case 0:
+                        setSubTitle("主列表");
+                        break;
+                    case 1:
+                        setSubTitle("音乐列表");
+                        break;
+                    case 2:
+                        setSubTitle("同步歌词");
+                        break;
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });*/
 		/*notifi = new Notification(R.mipmap.ic_launcher, "开始音乐", currentTimeMillis());  弃用的Notification
 		notifi.flags = FLAG_NO_CLEAR;
 		//RelativeLayout notiV = (RelativeLayout) inflater.inflate(notification, null);
@@ -544,6 +574,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 		toolbar.setSubtitleTextColor(0xffffffff);
 		//toolbar.setLogo(R.mipmap.ic_launcher);
 		//setSubTitle("专辑列表");
+
 		pColor = initColor;
 		setSupportActionBar(toolbar);
 		getSupportActionBar().setHomeButtonEnabled(true);
@@ -558,7 +589,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 			SystemBarConfig config = tintManager.getConfig();
 			outer.setPadding(0, config.getPixelInsetTop(true), 0, config.getPixelInsetBottom());  //　不然一块儿白
 		}
-
+        setSubTitle("主列表");
 		mDrawerToggle = new ActionBarDrawerToggle(this,
 				drawerLayout,
 				toolbar,
@@ -640,15 +671,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 	}
 
 	@Override
-	public void onBackPressed() {
-		if (materialSheetFab.isSheetVisible()) {
-			materialSheetFab.hideSheet();
-		} else {
-			super.onBackPressed();
-		}
-	}
-
-	@Override
 	protected void onDestroy() {
 		super.onDestroy();
 		ImageLoader.getInstance().clearDiskCache();
@@ -661,7 +683,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 			if (materialSheetFab.isSheetVisible()) {
 				materialSheetFab.hideSheet();
 			}else {
-				AlertDialog dialog = new AlertDialog.Builder(this).setCancelable(false).create();
+				AlertDialog dialog = new AlertDialog.Builder(this).setCancelable(true).create();
 				dialog.show();
 				Window window = dialog.getWindow();
 				window.setContentView(R.layout.exit_alert);

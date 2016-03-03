@@ -297,16 +297,16 @@ class MyImageLoader {
                 } else {
                     var pair = musics_map.keys.find { it.indivator == indicator }
                     if(pair != null){
-                        var list = musics_map.get(pair)
+                        var list = musics_map[pair]
                         var index = pair.index
                         if(list != null && list.size - 1 > index){
                             pair.index++
-                            var uri = MyImageLoader.getInstance().getUriFromSystem(list[0])
+                            var uri = MyImageLoader.getInstance().getUriFromSystem(list[index])
                             ImageLoader.getInstance().displayImage(uri.toString(), img, options, this)
                             return
                         }
                     }
-                    img.setImageResource(R.drawable.choose)
+                    img.setImageResource(R.drawable.album_default)
                     listener?.OnImageLoadFailed(indicator)
                 }
             }
@@ -321,20 +321,23 @@ class MyImageLoader {
         }
 
         override fun onLoadingFailed(imageUri: String?, view: View?, failReason: FailReason?) {
-            if(view != null && failReason != null && failReason.type.equals(FailReason.FailType.IO_ERROR)){
+            if(view != null && failReason != null /*&& failReason.type.equals(FailReason.FailType.IO_ERROR)*/){
                 var indicator = view.tag as Int
                 var pair = musics_map.keys.find { it.indivator == indicator }
                 if(pair != null){
-                    var list = musics_map.get(pair)
+                    var list = musics_map[pair]
                     var index = pair.index
+                    System.out.println("inner")
                     if(list != null && list.size - 1 > index){
                         pair.index++
-                        var uri = MyImageLoader.getInstance().getUriFromSystem(list[0])
+                        System.out.println("inner++")
+                        var uri = MyImageLoader.getInstance().getUriFromSystem(list[index])
                         ImageLoader.getInstance().displayImage(uri.toString(), view as ImageView, options, this)
                         return
                     }
                 }
-                (view as ImageView).setImageResource(R.drawable.choose)
+                debug(failReason.type)
+                (view as ImageView).setImageResource(R.drawable.album_default)
                 listener?.OnImageLoadFailed(indicator)
             }
         }

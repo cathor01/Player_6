@@ -20,4 +20,24 @@
         <attr name="right_top_radius" format="dimension" />
         <attr name="right_bottom_radius" format="dimension" />
     </declare-styleable>
+
+    <declare-styleable name="BubblePagerIndicator">
+        <attr name="maxRadius" format="dimension"/>
+        <attr name="minRadius" format="dimension"/>
+        <attr name="offset" format="dimension"/>
+        <attr name="bubbleColor" format="color"/>
+        <attr name="num" format="integer"/>
+        <attr name="current" format="integer"/>
+    </declare-styleable>
+
+    <declare-styleable name="MaterialButton">
+        <attr name="backColor" format="color"/>
+        <attr name="maxTime" format="integer"/>
+    </declare-styleable>
+
+    <declare-styleable name="FABListGroup">
+        <attr name="buttonColor" format="color"/>
+        <attr name="offset" format="dimension"/>
+        <attr name="smallButtonNum" format="integer"/>
+    </declare-styleable>
 </resources>

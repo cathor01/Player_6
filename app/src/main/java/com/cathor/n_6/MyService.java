@@ -422,6 +422,8 @@ public class MyService extends Service{
 			break;
 		}
 	}
+
+
 	/**
 	 * 设置播放模式
 	 * */
@@ -442,9 +444,9 @@ public class MyService extends Service{
 	 * */
 	public void moveToNext(){
 		MyFragment.change = 1;
-		Logger.INSTANCE.d("nowPlay -p ------->" + getNowPlay());
+		Logger.INSTANCE.d("nowPlay -p --------->" + getNowPlay());
 		setNowPlay(album, (getNowPlay() + 1) % length);
-		Logger.INSTANCE.d("nowPlay -l ------->" + getNowPlay());
+		Logger.INSTANCE.d("nowPlay -l --------->" + getNowPlay());
 		play(MyService.PLAY_CHANGE_RESOURCE);
 
 		MainActivity.getInstance().updateNotification(1);

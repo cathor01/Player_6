@@ -57,7 +57,9 @@ public class AlbumFragment extends Fragment {
         }
     };*/
 
-    public static AlbumFragment getInstance(){
+
+
+	public static AlbumFragment getInstance(){
         if(instance == null){
             instance = new AlbumFragment();
         }
@@ -77,6 +79,7 @@ public class AlbumFragment extends Fragment {
         handler.sendMessage(msg);
     }*/
 
+
 	@SuppressLint("ViewHolder") @Override
 	public View onCreateView(LayoutInflater tinflater,
 			@Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -88,7 +91,8 @@ public class AlbumFragment extends Fragment {
 	}
 
 
-    private Handler handler = new Handler(){
+
+	private Handler handler = new Handler(){
 		@Override
 		public void handleMessage(Message msg) {
 			super.handleMessage(msg);

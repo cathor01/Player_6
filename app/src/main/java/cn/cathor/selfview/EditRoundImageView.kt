@@ -1,4 +1,4 @@
-package com.cathor.n_6
+package cn.cathor.selfview
 
 import android.content.Context
 import android.graphics.*
@@ -6,6 +6,7 @@ import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.NinePatchDrawable
 import android.util.AttributeSet
 import android.widget.ImageView
+import com.cathor.n_6.R
 
 /**
  * Created by Cathor on 2016/3/1 21:06.
@@ -26,12 +27,12 @@ class EditRoundImageView : ImageView {
         // TODO Auto-generated constructor stub
     }
 
-    constructor(context:Context, attrs: AttributeSet, defStyle : Int): super(context, attrs, defStyle) {
+    constructor(context: Context, attrs: AttributeSet, defStyle : Int): super(context, attrs, defStyle) {
         // TODO Auto-generated constructor stub
         setDefaultAttributes(attrs)
     }
 
-    constructor(context:Context, attrs: AttributeSet) :super(context, attrs) {
+    constructor(context: Context, attrs: AttributeSet) :super(context, attrs) {
         // TODO Auto-generated constructor stub
         setDefaultAttributes(attrs)
     }
@@ -47,6 +48,7 @@ class EditRoundImageView : ImageView {
         rightBottomRadius = a.getDimensionPixelSize(
                 R.styleable.EditRoundImageView_right_bottom_radius, defaultRadius)
     }
+
 
     override fun onDraw(canvas: Canvas?) {
         val drawable = drawable ?: return

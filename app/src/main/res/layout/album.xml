@@ -7,7 +7,7 @@
     android:layout_margin="0dp"
     android:background="@drawable/backgroundradius"
     >
-    <com.cathor.n_6.EditRoundImageView
+    <cn.cathor.selfview.EditRoundImageView
         android:id="@+id/album_img"
         android:layout_height="match_parent"
         android:layout_width="100dp"

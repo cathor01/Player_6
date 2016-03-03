@@ -7,14 +7,14 @@ import android.util.Log
  * Created by Cathor on 2016/3/1 15:21.
  */
 
-inline fun <reified T> T.debug(word: String) : Unit{
-    Log.d(T::class.qualifiedName, word)
+inline fun <reified T> T.debug(word: Any?) : Unit{
+    Log.d(T::class.qualifiedName, "debug " + word)
 }
 
-inline fun <reified T> T.error(word: String){
-    Log.e(T::class.qualifiedName, word)}
+inline fun <reified T> T.error(word: Any?){
+    Log.e(T::class.qualifiedName, "error " + word)}
 
-inline fun <reified T> T.verbose(word: String){Log.v(T::class.qualifiedName, word)}
+inline fun <reified T> T.verbose(word: Any?){Log.v(T::class.qualifiedName, "verbose " + word)}
 
 object Logger{
     fun d(message: Any?){
